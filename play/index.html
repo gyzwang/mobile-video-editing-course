@@ -380,30 +380,6 @@ body.fullscreen-mode .ppt-console:hover {
   opacity: 1;
 }
 
-/* iOS Safari immersive mode (CSS-based fullscreen fallback) */
-body.ios-immersive .nav {
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s;
-}
-body.ios-immersive .cnt {
-  opacity: 0.2;
-  transition: opacity 0.3s;
-}
-body.ios-immersive .ppt-console {
-  opacity: 0.08;
-  transition: opacity 0.3s;
-  bottom: 6px;
-}
-body.ios-immersive .ppt-console:hover,
-body.ios-immersive .ppt-console:focus-within {
-  opacity: 1;
-}
-/* 隐藏当前幻灯片的内容区不显示页码跳动 */
-body.ios-immersive .slide-counter {
-  opacity: 0.15;
-}
-
 /* Export Toast Style */
 .export-toast {
   position: fixed;
@@ -1761,32 +1737,8 @@ function toggleAutoplay() {
   }
 }
 
-/* --- Fullscreen Presentation (iOS Safari Compatible) --- */
-function isiOS() {
-  return /iPad|iPhone|iPod/.test(navigator.userAgent) || 
-         (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-}
-
+/* --- Fullscreen Presentation --- */
 function toggleFullscreen() {
-  // iOS Safari does not support standard Fullscreen API on regular elements
-  // Use CSS immersive mode as reliable fallback
-  if (isiOS()) {
-    const isImmersive = document.body.classList.contains('ios-immersive');
-    if (!isImmersive) {
-      document.body.classList.add('ios-immersive');
-      document.getElementById('btn-fullscreen').classList.add('active');
-      document.getElementById('btn-fullscreen').innerHTML = '⛶';
-      // Show tip on first use
-      showToast('已进入沉浸模式！再次点击全屏按钮可退出。');
-    } else {
-      document.body.classList.remove('ios-immersive');
-      document.getElementById('btn-fullscreen').classList.remove('active');
-      document.getElementById('btn-fullscreen').innerHTML = '🖥️';
-    }
-    return;
-  }
-
-  // Standard browsers
   if (!document.fullscreenElement) {
     document.documentElement.requestFullscreen().then(() => {
       document.body.classList.add('fullscreen-mode');
