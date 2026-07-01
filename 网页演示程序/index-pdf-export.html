@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>手机剪辑零基础入门课</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#08080c;--glass:rgba(255,255,255,.035);--border:rgba(255,255,255,.07);
+  --accent:#7c5cfc;--accent2:#00d4ff;--text:#eeeef5;--muted:#5e5e7e;
+  --r:20px;
+}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--text);
+  font-family:'Outfit',-apple-system,'PingFang SC','Microsoft YaHei',sans-serif}
+body{background-image:
+  radial-gradient(ellipse at 12% 48%,rgba(108,92,231,.10)0%,transparent 50%),
+  radial-gradient(ellipse at 85% 18%,rgba(0,212,255,.07)0%,transparent 50%),
+  radial-gradient(ellipse at 50% 92%,rgba(108,92,231,.04)0%,transparent 50%)}
+body::before{content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:0}
+
+#app{position:relative;width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;z-index:1}
+
+.slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .45s cubic-bezier(.4,0,.2,1),transform .45s cubic-bezier(.4,0,.2,1);
+  transform:translateX(50px) scale(.98)}
+.slide.active{opacity:1;pointer-events:auto;transform:translateX(0) scale(1)}
+.slide.exit-l{opacity:0;transform:translateX(-50px) scale(.98)}
+
+.si{width:min(100vw,177.78vh);height:min(100vh,56.25vw);display:flex;position:relative;overflow:hidden}
+.si::after{content:'';position:absolute;left:48%;top:12%;bottom:12%;width:1px;
+  background:linear-gradient(180deg,transparent,rgba(124,92,231,.18),transparent);pointer-events:none}
+
+.sl{width:48%;height:100%;display:flex;align-items:center;justify-content:center;padding:.45rem .7rem .45rem 2.2rem;position:relative}
+.sl svg{max-width:90%;max-height:85%;filter:drop-shadow(0 4px 24px rgba(124,92,231,.06))}
+.phone-shot{height:min(91vh,86%);max-height:820px;max-width:96%;aspect-ratio:9/16;border-radius:34px;overflow:hidden;position:relative;
+  background:#0b0b10;border:1px solid rgba(255,255,255,.12);
+  box-shadow:0 30px 96px rgba(0,0,0,.54),0 0 72px rgba(124,92,231,.20)}
+.phone-shot::before{content:'';position:absolute;inset:0;border-radius:inherit;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),inset 0 0 22px rgba(255,255,255,.05);
+  pointer-events:none;z-index:2}
+.phone-shot img{width:100%;height:100%;object-fit:cover;display:block}
+.phone-pair{display:flex;align-items:center;justify-content:center;gap:1.45rem;width:100%;height:100%}
+.phone-pair .phone-shot{height:min(82vh,78%);max-height:720px;max-width:45%}
+.sr{width:52%;height:100%;display:flex;align-items:center;padding:2.3rem 3.2rem 2.3rem .6rem}
+.sri{max-width:820px;width:100%}
+
+.badge{display:inline-block;font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--accent);background:rgba(124,92,231,.1);padding:.35em 1em;border-radius:100px;
+  margin-bottom:1rem;font-weight:600}
+h1{font-size:clamp(2.15rem,4.7vw,3.75rem);font-weight:800;line-height:1.12;letter-spacing:-.025em;margin-bottom:1rem}
+h1 em{font-style:normal;background:linear-gradient(135deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+h2{font-size:clamp(1.7rem,3.35vw,2.65rem);font-weight:700;line-height:1.2;margin-bottom:.95rem}
+h2 em{font-style:normal;color:var(--accent)}
+.sub{font-size:clamp(1.1rem,1.75vw,1.42rem);color:var(--muted);line-height:1.62;margin-bottom:1.45rem}
+.bullets,.nums{list-style:none;display:flex;flex-direction:column;gap:.68rem}
+.bullets li{font-size:clamp(1.04rem,1.5vw,1.28rem);color:rgba(238,238,245,.78);line-height:1.58;
+  padding-left:1.4rem;position:relative}
+.bullets li::before{content:'';position:absolute;left:0;top:.55em;width:5px;height:5px;
+  border-radius:50%;background:var(--accent);opacity:.55}
+.nums{counter-reset:n}
+.nums li{counter-increment:n;font-size:clamp(1.04rem,1.5vw,1.28rem);color:rgba(238,238,245,.78);
+  line-height:1.55;padding-left:2rem;position:relative}
+.nums li::before{content:counter(n);position:absolute;left:0;top:.12em;width:1.35em;height:1.35em;
+  border-radius:7px;background:rgba(124,92,231,.13);color:var(--accent);font-size:.72em;
+  font-weight:600;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace}
+
+.gcard{background:var(--glass);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border:1px solid var(--border);border-radius:var(--r);padding:1.28rem 1.5rem;margin-top:.8rem}
+.gcard p{font-size:clamp(.98rem,1.4vw,1.16rem);color:rgba(238,238,245,.66);line-height:1.62}
+
+.toc-row{display:flex;align-items:center;gap:.7rem;padding:.45rem 0;
+  border-bottom:1px solid rgba(255,255,255,.035)}
+.toc-n{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--accent);min-width:1.6em}
+.toc-t{font-size:clamp(.84rem,1.2vw,1.02rem);color:rgba(238,238,245,.65)}
+
+.nav{position:fixed;top:50%;transform:translateY(-50%);z-index:100;width:44px;height:44px;
+  border-radius:50%;border:1px solid var(--border);background:rgba(8,8,12,.55);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  color:var(--text);font-size:1.15rem;cursor:pointer;display:flex;align-items:center;
+  justify-content:center;transition:all .2s ease;font-family:inherit}
+.nav:hover{background:rgba(124,92,231,.14);border-color:rgba(124,92,231,.25)}
+.nav:disabled{opacity:.15;cursor:default}
+.nav:disabled:hover{background:rgba(8,8,12,.55);border-color:var(--border)}
+.np{left:.8rem}.nn{right:.8rem}
+
+.prog{position:fixed;bottom:0;left:0;right:0;height:3px;background:rgba(255,255,255,.03);z-index:100}
+.prog-f{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));
+  transition:width .35s ease;width:0}
+.cnt{position:fixed;bottom:.7rem;right:1.2rem;font-size:.68rem;color:var(--muted);
+  font-family:'DM Mono',monospace;letter-spacing:.06em;z-index:100}
+
+.cover-t{font-size:clamp(2.55rem,5.9vw,4.45rem);font-weight:800;line-height:1.08;letter-spacing:-.03em}
+.sec-t{font-size:clamp(2.15rem,4.55vw,3.6rem);font-weight:700;line-height:1.15}
+.sec-n{font-family:'DM Mono',monospace;font-size:clamp(.65rem,.9vw,.8rem);
+  color:var(--accent2);letter-spacing:.1em;margin-bottom:.5rem;display:block}
+
+@media(max-width:900px){
+  .si{flex-direction:column;width:100vw;height:100vh}
+  .sl,.sr{width:100%;height:50%;padding:1.2rem}
+  .sr{align-items:flex-start;padding-top:0}
+  .si::after{display:none}
+  .sl svg{max-height:90%}
+  .phone-shot{height:min(92%,430px);max-width:80%}
+  .phone-pair{gap:.8rem}
+  .phone-pair .phone-shot{height:min(88%,390px);max-width:43%}
+}
+</style>
+
+<style id="pdf-export-cleanup">
+.nav,.prog,.cnt{display:none!important}
+.slide{transition:none!important;transform:none!important}
+body::before{opacity:.75}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<button class="nav np" id="prev" aria-label="上一页">&#8249;</button>
+<button class="nav nn" id="next" aria-label="下一页">&#8250;</button>
+<div class="prog"><div class="prog-f" id="pf"></div></div>
+<div class="cnt" id="ct">01 / 52</div>
+
+<script>
+const PF=`<rect x="10" y="10" width="160" height="320" rx="22" fill="none" stroke="rgba(255,255,255,.10)" stroke-width="1.5"/><rect x="18" y="38" width="144" height="254" rx="8" fill="#111120"/><circle cx="90" cy="21" r="3" fill="rgba(255,255,255,.04)"/><circle cx="90" cy="305" r="5" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="1"/>`;
+const W=180,H=340;
+const s=(c,w,h)=>`<svg viewBox="0 0 ${w||W} ${h||H}" xmlns="http://www.w3.org/2000/svg">${c}</svg>`;
+const shot=(name,alt)=>`<div class="phone-shot"><img src="./assets/${name}" alt="${alt}" loading="lazy"></div>`;
+const pair=(a,b)=>`<div class="phone-pair">${shot(a[0],a[1])}${shot(b[0],b[1])}</div>`;
+const SHOTS={
+  4:shot('slide05-cut-simple-v2.png','视频剪辑裁剪拼接示意'),
+  5:shot('slide06-resolution-simple-v2.png','导出分辨率设置'),
+  6:shot('slide07-framerate-simple-v2.png','帧率与慢动作设置'),
+  7:shot('slide08-aspect-simple-v2.png','画面比例选择'),
+  8:pair(['album-grid-v1.png','手机相册视频网格'],['album-trim-v1.png','手机相册裁剪界面']),
+  9:shot('album-grid-v1.png','手机相册视频网格'),
+  10:shot('album-trim-v1.png','手机相册裁剪时长'),
+  11:shot('album-trim-v1.png','手机相册分割片段'),
+  12:shot('album-trim-v1.png','手机相册调整速度'),
+  13:shot('album-trim-v1.png','手机相册滤镜界面'),
+  14:shot('album-grid-v1.png','手机相册保存导出'),
+  15:pair(['jianying-home-v1.png','剪辑应用首页'],['jianying-editor-v1.png','剪辑应用时间线']),
+  16:shot('jianying-home-v1.png','剪辑应用首页'),
+  17:shot('jianying-editor-v1.png','剪辑应用界面总览'),
+  18:shot('jianying-home-v1.png','开始创作入口'),
+  19:shot('jianying-import-v1.png','素材导入页面'),
+  20:shot('jianying-editor-v1.png','剪辑时间线界面'),
+  48:shot('jianying-export-v1.png','导出与分享界面'),
+  49:shot('jianying-export-v1.png','导出设置界面')
+};
+
+/* ====== 52 Slides ====== */
+const D=[
+
+// ---- 1 COVER ----
+{type:'cover',html:`
+  <div class="badge">零基础 · 手机剪辑</div>
+  <h1 class="cover-t">手机剪辑<br><em>零基础入门课</em></h1>
+  <p class="sub">从零开始，用手机轻松学会视频剪辑<br>以剪映 APP 为核心教学工具</p>`,
+svg:s(`${PF}
+  <circle cx="90" cy="165" r="26" fill="rgba(124,92,231,.12)" stroke="rgba(124,92,231,.35)" stroke-width="1.5"/>
+  <polygon points="85,153 103,165 85,177" fill="#7c5cfc"/>
+  <rect x="30" y="55" width="120" height="4" rx="2" fill="rgba(124,92,231,.15)"/>
+  <rect x="30" y="275" width="120" height="4" rx="2" fill="rgba(0,212,255,.10)"/>
+  <circle cx="40" cy="80" r="2" fill="rgba(0,212,255,.45)"/>
+  <circle cx="142" cy="95" r="1.5" fill="rgba(124,92,231,.45)"/>
+  <circle cx="48" cy="240" r="1.5" fill="rgba(0,212,255,.35)"/>
+  <circle cx="136" cy="225" r="2" fill="rgba(124,92,231,.35)"/>
+  <circle cx="90" cy="115" r="1" fill="rgba(255,255,255,.2)"/>
+  <circle cx="65" cy="200" r="1" fill="rgba(255,255,255,.15)"/>
+`)},
+
+// ---- 2 课程介绍 ----
+{type:'content',badge:'课程介绍',title:'这门课<em>讲什么</em>',html:`
+  <p class="sub">专为完全零基础的新手设计，全程以手机操作为主</p>
+  <ul class="bullets">
+    <li>核心工具：<strong>剪映</strong>（手机端）— 免费、功能全、模板多</li>
+    <li>辅助工具：手机相册自带的简单剪辑功能</li>
+    <li>专业软件（PR / FCP / 达芬奇）仅做了解，不深入讲解</li>
+    <li>学完即可独立完成短视频的拍摄后剪辑全流程</li>
+  </ul>
+  <div class="gcard"><p>预计学习时间：2-3 小时即可上手，后续通过实践不断提升</p></div>`,
+svg:s(`${PF}
+  <rect x="32" y="65" width="116" height="30" rx="6" fill="rgba(124,92,231,.15)"/>
+  <text x="90" y="85" text-anchor="middle" fill="#7c5cfc" font-size="11" font-family="Outfit">JianYing</text>
+  <rect x="32" y="105" width="116" height="20" rx="4" fill="rgba(0,212,255,.08)"/>
+  <rect x="38" y="110" width="60" height="10" rx="2" fill="rgba(0,212,255,.15)"/>
+  <rect x="32" y="135" width="116" height="20" rx="4" fill="rgba(255,255,255,.03)"/>
+  <rect x="38" y="140" width="80" height="10" rx="2" fill="rgba(255,255,255,.05)"/>
+  <rect x="32" y="165" width="116" height="20" rx="4" fill="rgba(255,255,255,.03)"/>
+  <rect x="38" y="170" width="50" height="10" rx="2" fill="rgba(255,255,255,.05)"/>
+  <circle cx="90" cy="220" r="18" fill="none" stroke="rgba(124,92,231,.25)" stroke-width="1.5"/>
+  <polyline points="83,214 90,220 83,226" fill="none" stroke="#7c5cfc" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="90" y1="220" x2="100" y2="220" stroke="#7c5cfc" stroke-width="1.5" stroke-linecap="round"/>
+`)},
+
+// ---- 3 目录 ----
+{type:'content',badge:'目录',title:'课程<em>内容导航</em>',html:`
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:.3rem .8rem">
+    <div class="toc-row"><span class="toc-n">01</span><span class="toc-t">基础概念</span></div>
+    <div class="toc-row"><span class="toc-n">06</span><span class="toc-t">音频处理</span></div>
+    <div class="toc-row"><span class="toc-n">02</span><span class="toc-t">手机相册剪辑</span></div>
+    <div class="toc-row"><span class="toc-n">07</span><span class="toc-t">特效与滤镜</span></div>
+    <div class="toc-row"><span class="toc-n">03</span><span class="toc-t">剪映入门</span></div>
+    <div class="toc-row"><span class="toc-n">08</span><span class="toc-t">画面调整</span></div>
+    <div class="toc-row"><span class="toc-n">04</span><span class="toc-t">基础剪辑操作</span></div>
+    <div class="toc-row"><span class="toc-n">09</span><span class="toc-t">导出与分享</span></div>
+    <div class="toc-row"><span class="toc-n">05</span><span class="toc-t">文字与贴纸</span></div>
+    <div class="toc-row"><span class="toc-n">—</span><span class="toc-t">实用技巧</span></div>
+  </div>`,
+svg:s(`<rect x="30" y="20" width="120" height="300" rx="16" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+  <rect x="42" y="45" width="96" height="22" rx="5" fill="rgba(124,92,231,.12)"/>
+  <rect x="50" y="51" width="50" height="10" rx="2" fill="rgba(124,92,231,.25)"/>
+  ${[0,1,2,3,4,5,6,7].map(i=>`<rect x="42" y="${78+i*28}" width="96" height="20" rx="4" fill="rgba(255,255,255,.025)"/>
+  <rect x="48" y="${83+i*28}" width="${40+Math.random()*30}" height="10" rx="2" fill="rgba(255,255,255,.05)"/>
+  <circle cx="130" cy="${88+i*28}" r="3" fill="rgba(124,92,231,.15)"/>`).join('')}
+`)},
+
+// ---- 4 SECTION: 基础概念 ----
+{type:'section',num:'01',title:'基础概念',sub:'了解视频剪辑的核心术语',svg:s(`
+  <circle cx="90" cy="170" r="72" fill="none" stroke="rgba(124,92,231,.10)" stroke-width="1"/>
+  <circle cx="90" cy="170" r="48" fill="none" stroke="rgba(0,212,255,.08)" stroke-width="1"/>
+  <circle cx="90" cy="170" r="24" fill="rgba(124,92,231,.08)"/>
+  <circle cx="90" cy="170" r="4" fill="var(--accent)"/>
+  <line x1="90" y1="98" x2="90" y2="110" stroke="rgba(124,92,231,.3)" stroke-width="1"/>
+  <line x1="90" y1="230" x2="90" y2="242" stroke="rgba(124,92,231,.3)" stroke-width="1"/>
+  <line x1="18" y1="170" x2="30" y2="170" stroke="rgba(0,212,255,.3)" stroke-width="1"/>
+  <line x1="150" y1="170" x2="162" y2="170" stroke="rgba(0,212,255,.3)" stroke-width="1"/>
+  <text x="90" y="72" text-anchor="middle" fill="rgba(255,255,255,.12)" font-size="10" font-family="DM Mono">RESOLUTION</text>
+  <text x="90" y="275" text-anchor="middle" fill="rgba(255,255,255,.12)" font-size="10" font-family="DM Mono">FRAMERATE</text>
+  <text x="8" y="173" text-anchor="middle" fill="rgba(255,255,255,.12)" font-size="10" font-family="DM Mono">CODEC</text>
+`)},
+
+// ---- 5 什么是视频剪辑 ----
+{type:'content',badge:'基础概念',title:'什么是<em>视频剪辑</em>',html:`
+  <p class="sub">视频剪辑 = 把拍摄的原始素材，通过剪切、拼接、添加效果，变成一个完整的视频作品</p>
+  <ul class="nums">
+    <li><strong>选取</strong> — 从大量素材中挑出有用的片段</li>
+    <li><strong>裁剪</strong> — 去掉不需要的开头、结尾、中间废镜头</li>
+    <li><strong>拼接</strong> — 把多个片段按故事线组合在一起</li>
+    <li><strong>包装</strong> — 添加音乐、文字、特效让视频更精彩</li>
+  </ul>`,
+svg:s(`${PF}
+  <rect x="30" y="58" width="42" height="55" rx="4" fill="#6C5CE7" opacity=".35"/>
+  <rect x="78" y="58" width="42" height="55" rx="4" fill="#00CEC9" opacity=".30"/>
+  <rect x="126" y="58" width="26" height="55" rx="4" fill="#FD79A8" opacity=".25"/>
+  <line x1="90" y1="130" x2="90" y2="155" stroke="rgba(255,255,255,.12)" stroke-width="1" stroke-dasharray="3,3"/>
+  <polygon points="85,145 95,145 90,155" fill="rgba(255,255,255,.12)"/>
+  <rect x="46" y="168" width="88" height="50" rx="6" fill="rgba(124,92,231,.12)" stroke="rgba(124,92,231,.2)" stroke-width="1"/>
+  <text x="90" y="198" text-anchor="middle" fill="rgba(124,92,231,.5)" font-size="9" font-family="DM Mono">OUTPUT.mp4</text>
+  <circle cx="90" cy="240" r="8" fill="none" stroke="rgba(0,212,255,.25)" stroke-width="1"/>
+  <polygon points="87,236 95,240 87,244" fill="rgba(0,212,255,.4)"/>
+`)},
+
+// ---- 6 分辨率 ----
+{type:'content',badge:'基础概念',title:'分辨率：<em>720p / 1080p / 4K</em>',html:`
+  <p class="sub">分辨率越高，画面越清晰，文件也越大</p>
+  <ul class="bullets">
+    <li><strong>720p</strong>（1280×720）— 高清，适合快速分享、省流量</li>
+    <li><strong>1080p</strong>（1920×1080）— 全高清，<strong>新手首选</strong>，清晰且文件适中</li>
+    <li><strong>4K</strong>（3840×2160）— 超高清，画质最佳但文件很大、剪辑要求高</li>
+  </ul>
+  <div class="gcard"><p>新手建议：日常发朋友圈、抖音用 1080p 足够</p></div>`,
+svg:s(`
+  <rect x="15" y="40" width="55" height="34" rx="4" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+  <text x="42" y="60" text-anchor="middle" fill="rgba(255,255,255,.2)" font-size="7" font-family="DM Mono">720p</text>
+  <rect x="15" y="85" width="85" height="53" rx="4" fill="rgba(124,92,231,.10)" stroke="rgba(124,92,231,.25)" stroke-width="1"/>
+  <text x="57" y="115" text-anchor="middle" fill="rgba(124,92,231,.5)" font-size="9" font-family="DM Mono">1080p</text>
+  <text x="110" y="115" fill="rgba(124,92,231,.3)" font-size="7" font-family="DM Mono">推荐</text>
+  <rect x="15" y="150" width="140" height="88" rx="6" fill="rgba(0,212,255,.05)" stroke="rgba(0,212,255,.12)" stroke-width="1"/>
+  <text x="85" y="198" text-anchor="middle" fill="rgba(0,212,255,.3)" font-size="10" font-family="DM Mono">4K</text>
+  <line x1="75" y1="258" x2="165" y2="258" stroke="rgba(255,255,255,.06)" stroke-width="1"/>
+  <text x="75" y="270" fill="rgba(255,255,255,.12)" font-size="7" font-family="DM Mono">文件大小 →</text>
+  <circle cx="85" cy="258" r="2" fill="rgba(0,212,255,.3)"/>
+  <circle cx="135" cy="258" r="3" fill="rgba(124,92,231,.3)"/>
+  <circle cx="160" cy="258" r="4" fill="rgba(0,212,255,.2)"/>
+`)},
+
+// ---- 7 帧率 ----
+{type:'content',badge:'基础概念',title:'帧率：<em>fps（帧/秒）</em>',html:`
+  <p class="sub">帧率决定视频的流畅程度，每秒播放多少张画面</p>
+  <ul class="bullets">
+    <li><strong>24fps</strong> — 电影感，有轻微动态模糊，适合叙事类</li>
+    <li><strong>30fps</strong> — 标准流畅，<strong>最常用</strong>，适合日常 Vlog</li>
+    <li><strong>60fps</strong> — 非常流畅，适合运动、游戏画面</li>
+    <li><strong>120/240fps</strong> — 慢动作素材专用帧率</li>
+  </ul>
+  <div class="gcard"><p>剪映中可以随时变速，高帧率素材可以做出丝滑慢放</p></div>`,
+svg:s(`${[0,1,2,3,4,5,6,7].map(i=>`<rect x="${26+i*17}" y="${80+Math.sin(i*.8)*20}" width="12" height="${50+Math.cos(i*.6)*15}" rx="2" fill="rgba(124,92,231,${.08+i*0.03})"/>`).join('')}
+  <text x="90" y="180" text-anchor="middle" fill="rgba(255,255,255,.15)" font-size="8" font-family="DM Mono">24 FPS</text>
+  ${[0,1,2,3,4,5,6,7,8,9,10,11].map(i=>`<rect x="${22+i*12}" y="${200+Math.sin(i*1.2)*10}" width="8" height="${30+Math.cos(i*.8)*8}" rx="2" fill="rgba(0,212,255,${.06+i*0.015})"/>`).join('')}
+  <text x="90" y="260" text-anchor="middle" fill="rgba(255,255,255,.15)" font-size="8" font-family="DM Mono">60 FPS</text>
+  <text x="90" y="50" text-anchor="middle" fill="rgba(255,255,255,.08)" font-size="9" font-family="DM Mono">FRAMES PER SECOND</text>
+`)},
+
+// ---- 8 画面比例 ----
+{type:'content',badge:'基础概念',title:'画面比例<em>怎么选</em>',html:`
+  <p class="sub">不同平台适合不同的画面比例</p>
+  <ul class="bullets">
+    <li><strong>16:9</strong> — 横屏，B站、YouTube、西瓜视频</li>
+    <li><strong>9:16</strong> — 竖屏，抖音、快手、视频号、小红书</li>
+    <li><strong>1:1</strong> — 方形，朋友圈、Instagram</li>
+    <li><strong>4:3</strong> — 传统比例，部分纪录片风格</li>
+  </ul>
+  <div class="gcard"><p>建议：先确定发布的平台，再选画面比例，避免黑边</p></div>`,
+svg:s(`
+  <rect x="20" y="55" width="76" height="43" rx="4" fill="rgba(124,92,231,.12)" stroke="rgba(124,92,231,.25)" stroke-width="1"/>
+  <text x="58" y="80" text-anchor="middle" fill="rgba(124,92,231,.45)" font-size="8" font-family="DM Mono">16:9</text>
+  <rect x="110" y="50" width="38" height="67" rx="4" fill="rgba(0,212,255,.10)" stroke="rgba(0,212,255,.20)" stroke-width="1"/>
+  <text x="129" y="88" text-anchor="middle" fill="rgba(0,212,255,.40)" font-size="7" font-family="DM Mono">9:16</text>
+  <rect x="40" y="140" width="50" height="50" rx="4" fill="rgba(253,121,168,.08)" stroke="rgba(253,121,168,.18)" stroke-width="1"/>
+  <text x="65" y="169" text-anchor="middle" fill="rgba(253,121,168,.35)" font-size="8" font-family="DM Mono">1:1</text>
+  <rect x="105" y="140" width="48" height="36" rx="4" fill="rgba(255,255,255,.03)" stroke="rgba(255,255,255,.07)" stroke-width="1"/>
+  <text x="129" y="162" text-anchor="middle" fill="rgba(255,255,255,.15)" font-size="7" font-family="DM Mono">4:3</text>
+  <text x="90" y="240" text-anchor="middle" fill="rgba(255,255,255,.08)" font-size="8" font-family="DM Mono">ASPECT RATIO</text>
+  <line x1="30" y1="220" x2="150" y2="220" stroke="rgba(255,255,255,.04)" stroke-width="1"/>
+`)},
+
+// ---- 9 SECTION: 手机相册剪辑 ----
+{type:'section',num:'02',title:'手机相册剪辑',sub:'无需安装任何 APP，直接在相册中完成基础剪辑',svg:s(`
+  <rect x="35" y="30" width="110" height="110" rx="8" fill="rgba(124,92,231,.06)" stroke="rgba(124,92,231,.12)" stroke-width="1"/>
+  <rect x="35" y="155" width="110" height="110" rx="8" fill="rgba(0,212,255,.05)" stroke="rgba(0,212,255,.10)" stroke-width="1"/>
+  <rect x="35" y="280" width="110" height="40" rx="6" fill="rgba(255,255,255,.03)" stroke="rgba(255,255,255,.06)" stroke-width="1"/>
+  <circle cx="65" cy="70" r="12" fill="rgba(124,92,231,.15)"/>
+  <circle cx="115" cy="55" r="8" fill="rgba(0,212,255,.12)"/>
+  <circle cx="90" cy="100" r="6" fill="rgba(253,121,168,.12)"/>
+  <rect x="50" y="170" width="30" height="22" rx="3" fill="rgba(0,212,255,.12)"/>
+  <rect x="85" y="170" width="30" height="22" rx="3" fill="rgba(124,92,231,.12)"/>
+  <rect x="50" y="198" width="30" height="22" rx="3" fill="rgba(253,121,168,.10)"/>
+  <rect x="85" y="198" width="30" height="22" rx="3" fill="rgba(85,230,193,.10)"/>
+  <polygon points="88,232 100,240 88,248" fill="rgba(255,255,255,.08)"/>
+`)},
+
+// ---- 10 打开相册 ----
+{type:'content',badge:'相册剪辑',title:'打开<em>手机相册</em>找视频',html:`
+  <p class="sub">所有手机相册都支持基础编辑，操作入口一致</p>
+  <ul class="nums">
+    <li>打开手机<strong>「相册」</strong>或「图库」APP</li>
+    <li>找到你拍摄的视频，点击打开</li>
+    <li>点击底部<strong>「编辑」</strong>按钮（通常是铅笔或滑块图标）</li>
+    <li>进入编辑界面，底部出现时间线</li>
+  </ul>
+  <div class="gcard"><p>iPhone 用户：点击右上角「编辑」<br>安卓用户：点击底部「编辑」图标</p></div>`,
+svg:s(`${PF}
+  <rect x="28" y="52" width="34" height="34" rx="6" fill="rgba(124,92,231,.15)"/>
+  <rect x="66" y="52" width="34" height="34" rx="6" fill="rgba(0,212,255,.12)"/>
+  <rect x="104" y="52" width="34" height="34" rx="6" fill="rgba(253,121,168,.10)"/>
+  <rect x="28" y="90" width="34" height="34" rx="6" fill="rgba(85,230,193,.10)"/>
+  <rect x="66" y="90" width="34" height="34" rx="6" fill="rgba(255,255,255,.05)"/>
+  <rect x="104" y="90" width="34" height="34" rx="6" fill="rgba(255,255,255,.03)"/>
+  <rect x="28" y="128" width="34" height="34" rx="6" fill="rgba(255,255,255,.03)"/>
+  <rect x="66" y="128" width="34" height="34" rx="6" fill="rgba(255,255,255,.03)"/>
+  <rect x="104" y="128" width="34" height="34" rx="6" fill="rgba(255,255,255,.03)"/>
+  <rect x="52" y="90" width="34" height="34" rx="6" fill="rgba(124,92,231,.25)" stroke="rgba(124,92,231,.5)" stroke-width="1.5"/>
+  <polygon points="64,102 75,110 64,118" fill="rgba(255,255,255,.7)"/>
+`)},
+
+// ---- 11 裁剪时长 ----
+{type:'content',badge:'相册剪辑',title:'裁剪视频<em>时长</em>',html:`
+  <p class="sub">最基础的操作：去掉视频开头或结尾多余的部分</p>
+  <ul class="nums">
+    <li>进入编辑后，底部出现时间线，两端有<strong>黄色滑块</strong></li>
+    <li>拖动<strong>左侧滑块</strong> → 设置视频起点（裁掉前面）</li>
+    <li>拖动<strong>右侧滑块</strong> → 设置视频终点（裁掉后面）</li>
+    <li>预览确认后，点击「完成」或「保存」</li>
+  </ul>`,
+svg:s(`${PF}
+  <rect x="26" y="140" width="128" height="20" rx="4" fill="rgba(124,92,231,.12)"/>
+  <rect x="26" y="140" width="45" height="20" rx="4" fill="rgba(253,121,168,.2)"/>
+  <rect x="109" y="140" width="45" height="20" rx="4" fill="rgba(253,121,168,.2)"/>
+  <rect x="71" y="140" width="38" height="20" rx="2" fill="rgba(124,92,231,.25)"/>
+  <circle cx="71" cy="150" r="5" fill="#FDCB6E" opacity=".7"/>
+  <circle cx="109" cy="150" r="5" fill="#FDCB6E" opacity=".7"/>
+  <line x1="71" y1="128" x2="71" y2="165" stroke="rgba(253,203,110,.3)" stroke-width="1" stroke-dasharray="2,2"/>
+  <line x1="109" y1="128" x2="109" y2="165" stroke="rgba(253,203,110,.3)" stroke-width="1" stroke-dasharray="2,2"/>
+  <text x="90" y="185" text-anchor="middle" fill="rgba(255,255,255,.15)" font-size="7" font-family="DM Mono">保留片段</text>
+  <text x="48" y="185" text-anchor="middle" fill="rgba(253,121,168,.25)" font-size="6" font-family="DM Mono">删除</text>
+  <text x="131" y="185" text-anchor="middle" fill="rgba(253,121,168,.25)" font-size="6" font-family="DM Mono">删除</text>
+  <rect x="26" y="60" width="128" height="56" rx="6" fill="rgba(255,255,255,.03)"/>
+  <polygon points="80,78 100,92 80,106" fill="rgba(124,92,231,.2)"/>
+`)},
+
+// ---- 12 分割片段 ----
+{type:'content',badge:'相册剪辑',title:'分割<em>视频片段</em>',html:`
+  <p class="sub">把一个长视频切成多段，删除不需要的部分</p>
+  <ul class="nums">
+    <li>在时间线上拖动播放头到要<strong>切割的位置</strong></li>
+    <li>点击底部<strong>「拆分」</strong>或「分割」按钮</li>
+    <li>视频被分成两段，选中不需要的片段</li>
+    <li>点击<strong>「删除」</strong>即可去掉该片段</li>
+  </ul>
+  <div class="gcard"><p>提示：手机相册的分割功能较简单，更精细的切割请使用剪映</p></div>`,
+svg:s(`${PF}
+  <rect x="26" y="130" width="128" height="40" rx="4" fill="rgba(124,92,231,.08)"/>
+  <rect x="26" y="130" width="58" height="40" rx="4" fill="rgba(124,92,231,.18)"/>
+  <rect x="96" y="130" width="58" height="40" rx="4" fill="rgba(0,212,255,.12)"/>
+  <line x1="84" y1="122" x2="84" y2="178" stroke="var(--accent2)" stroke-width="2"/>
+  <polygon points="80,120 88,120 84,114" fill="var(--accent2)"/>
+  <text x="55" y="154" text-anchor="middle" fill="rgba(255,255,255,.2)" font-size="8" font-family="DM Mono">片段A</text>
+  <text x="125" y="154" text-anchor="middle" fill="rgba(255,255,255,.2)" font-size="8" font-family="DM Mono">片段B</text>
+  <line x1="44" y1="190" x2="66" y2="190" stroke="rgba(253,121,168,.3)" stroke-width="2" stroke-linecap="round"/>
+  <line x1="60" y1="184" x2="66" y2="190" stroke="rgba(253,121,168,.3)" stroke-width="2" stroke-linecap="round"/>
+  <line x1="60" y1="196" x2="66" y2="190" stroke="rgba(253,121,168,.3)" stroke-width="2" stroke-linecap="round"/>
+  <text x="44" y="205" fill="rgba(253,121,168,.3)" font-size="6" font-family="DM Mono">删除</text>
+  <circle cx="90" cy="80" r="20" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="1"/>
+  <line x1="84" y1="74" x2="96" y2="86" stroke="rgba(255,255,255,.12)" stroke-width="1.5"/>
+  <line x1="96" y1="74" x2="84" y2="86" stroke="rgba(255,255,255,.12)" stroke-width="1.5"/>
+`)},
+
+// ---- 13 调整速度 ----
+{type:'content',badge:'相册剪辑',title:'调整<em>播放速度</em>',html:`
+  <p class="sub">让视频变快或变慢，最简单的特效之一</p>
+  <ul class="nums">
+    <li>进入编辑模式，找到<strong>「速度」</strong>或「倍速」选项</li>
+    <li>选择倍速：<strong>0.5x</strong>（慢放2倍）/ <strong>1x</strong>（正常）/ <strong>2x</strong>（快进2倍）</li>
+    <li>实时预览效果，调整到满意</li>
+    <li>保存即可</li>
+  </ul>
+  <div class="gcard"><p>注意：手机相册变速是整体变速，剪映可以做分段变速</p></div>`,
+svg:s(`${PF}
+  <rect x="26" y="120" width="128" height="50" rx="6" fill="rgba(255,255,255,.03)"/>
+  <rect x="36" y="132" width="108" height="6" rx="3" fill="rgba(255,255,255,.06)"/>
+  <rect x="36" y="132" width="60" height="6" rx="3" fill="rgba(124,92,231,.35)"/>
+  <circle cx="96" cy="135" r="8" fill="var(--accent)" opacity=".5"/>
+  <text x="40" y="158" fill="rgba(255,255,255,.12)" font-size="7" font-family="DM Mono">0.5x</text>
+  <text x="70" y="158" fill="rgba(124,92,231,.4)" font-size="7" font-family="DM Mono">1x</text>
+  <text x="95" y="158" fill="rgba(255,255,255,.12)" font-size="7" font-family="DM Mono">2x</text>
+  <text x="118" y="158" fill="rgba(255,255,255,.12)" font-size="7" font-family="DM Mono">4x</text>
+  <text x="90" y="85" text-anchor="middle" fill="rgba(0,212,255,.2)" font-size="20" font-family="DM Mono">1.0x</text>
+  <path d="M60,100 L90,95 L120,100" fill="none" stroke="rgba(0,212,255,.15)" stroke-width="1"/>
+`)},
+
+// ---- 14 添加滤镜 ----
+{type:'content',badge:'相册剪辑',title:'给视频<em>加滤镜</em>',html:`
+  <p class="sub">手机相册自带滤镜，一键改变视频色调风格</p>
+  <ul class="nums">
+    <li>进入编辑模式，找到<strong>「滤镜」</strong>选项</li>
+    <li>左右滑动浏览不同滤镜效果</li>
+    <li>点击即可<strong>实时预览</strong></li>
+    <li>部分手机支持调节滤镜强度</li>
+  </ul>
+  <div class="gcard"><p>常见滤镜：鲜明、复古、黑白、暖色、冷色</p></div>`,
+svg:s(`${PF}
+  ${[[30,55,'#6C5CE7'],[72,55,'#00CEC9'],[114,55,'#FD79A8'],[30,97,'#FDCB6E'],[72,97,'#55E6C1'],[114,97,'#A29BFE']].map(([x,y,c])=>`<rect x="${x}" y="${y}" width="36" height="36" rx="6" fill="${c}" opacity=".18"/>`).join('')}
+  <rect x="72" y="55" width="36" height="36" rx="6" fill="none" stroke="#fff" stroke-width="1.5" opacity=".4"/>
+  <line x1="90" y1="145" x2="90" y2="230" stroke="rgba(255,255,255,.06)" stroke-width="1"/>
+  <rect x="50" y="155" width="80" height="60" rx="6" fill="rgba(0,212,255,.06)"/>
+  <circle cx="90" cy="185" r="15" fill="none" stroke="rgba(0,212,255,.2)" stroke-width="1"/>
+  <circle cx="90" cy="185" r="6" fill="rgba(0,212,255,.15)"/>
+`)},
+
+// ---- 15 保存导出 ----
+{type:'content',badge:'相册剪辑',title:'保存与<em>导出</em>',html:`
+  <p class="sub">完成编辑后，保存你的作品</p>
+  <ul class="nums">
+    <li>编辑完成后，点击右上角<strong>「完成」</strong>或「保存」</li>
+    <li>选择<strong>「保存为新剪辑」</strong>（推荐）— 保留原始素材</li>
+    <li>或选择「覆盖原视频」— 替换原始文件</li>
+    <li>保存后可在相册中找到编辑好的视频</li>
+  </ul>
+  <div class="gcard"><p>重要：建议始终选择「保存为新剪辑」，防止丢失原始素材</p></div>`,
+svg:s(`${PF}
+  <circle cx="90" cy="120" r="35" fill="rgba(85,230,193,.06)" stroke="rgba(85,230,193,.15)" stroke-width="1"/>
+  <polyline points="78,120 87,130 105,110" fill="none" stroke="rgba(85,230,193,.5)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="55" y="170" width="70" height="24" rx="12" fill="rgba(124,92,231,.2)"/>
+  <text x="90" y="185" text-anchor="middle" fill="rgba(124,92,231,.6)" font-size="8" font-family="DM Mono">保存</text>
+  <rect x="55" y="200" width="70" height="24" rx="12" fill="rgba(255,255,255,.04)"/>
+  <text x="90" y="215" text-anchor="middle" fill="rgba(255,255,255,.2)" font-size="7" font-family="DM Mono">覆盖原视频</text>
+`)},
+
+// ---- 16 SECTION: 剪映入门 ----
+{type:'section',num:'03',title:'剪映入门',sub:'掌握最流行手机剪辑工具的核心操作',svg:s(`
+  <rect x="40" y="40" width="100" height="100" rx="14" fill="rgba(124,92,231,.08)" stroke="rgba(124,92,231,.15)" stroke-width="1"/>
+  <text x="90" y="80" text-anchor="middle" fill="rgba(124,92,231,.25)" font-size="14" font-weight="700" font-family="Outfit">剪映</text>
+  <text x="90" y="100" text-anchor="middle" fill="rgba(255,255,255,.1)" font-size="8" font-family="DM Mono">JianYing</text>
+  <rect x="40" y="160" width="100" height="100" rx="14" fill="rgba(0,212,255,.05)" stroke="rgba(0,212,255,.10)" stroke-width="1"/>
+  <text x="90" y="200" text-anchor="middle" fill="rgba(0,212,255,.2)" font-size="11" font-weight="700" font-family="Outfit">CapCut</text>
+  <text x="90" y="220" text-anchor="middle" fill="rgba(255,255,255,.08)" font-size="7" font-family="DM Mono">国际版</text>
+  <line x1="90" y1="140" x2="90" y2="160" stroke="rgba(255,255,255,.06)" stroke-width="1" stroke-dasharray="2,2"/>
+`)},
+
+// ---- 17 下载安装 ----
+{type:'content',badge:'剪映入门',title:'下载与<em>安装剪映</em>',html:`
+  <p class="sub">免费下载，支持 iOS 和 Android</p>
+  <ul class="nums">
+    <li>打开<strong> App Store</strong>（苹果）或<strong>应用商店</strong>（安卓）</li>
+    <li>搜索 <strong>「剪映」</strong>（英文名 CapCut）</li>
+    <li>点击<strong>「获取」/「安装」</strong>，等待下载完成</li>
+    <li>打开剪映，可选择<strong>游客模式</strong>直接使用，无需登录</li>
+  </ul>
+  <div class="gcard"><p>剪映完全免费，所有核心功能均不收费</p></div>`,
+svg:s(`${PF}
+  <rect x="55" y="60" width="70" height="70" rx="14" fill="rgba(124,92,231,.10)" stroke="rgba(124,92,231,.20)" stroke-width="1"/>
+  <text x="90" y="95" text-anchor="middle" fill="rgba(124,92,231,.4)" font-size="16" font-weight="700" font-family="Outfit">剪</text>
+  <rect x="55" y="145" width="70" height="28" rx="14" fill="rgba(85,230,193,.15)"/>
+  <text x="90" y="163" text-anchor="middle" fill="rgba(85,230,193,.5)" font-size="9" font-weight="600" font-family="DM Mono">安装</text>
+  <rect x="55" y="180" width="70" height="20" rx="10" fill="rgba(255,255,255,.03)"/>
+  <text x="90" y="193" text-anchor="middle" fill="rgba(255,255,255,.15)" font-size="7" font-family="DM Mono">45.2 MB</text>
+  <line x1="60" y1="210" x2="120" y2="210" stroke="rgba(124,92,231,.2)" stroke-width="3" stroke-linecap="round"/>
+  <line x1="60" y1="210" x2="90" y2="210" stroke="rgba(124,92,231,.5)" stroke-width="3" stroke-linecap="round"/>
+`)},
+
+// ---- 18 界面总览 ----
+{type:'content',badge:'剪映入门',title:'剪映<em>界面总览</em>',html:`
+  <p class="sub">认识剪映的主要功能区域</p>
+  <ul class="bullets">
+    <li><strong>顶部预览区</strong> — 实时查看视频效果</li>
+    <li><strong>底部工具栏</strong> — 所有功能入口（剪辑、音频、文字、贴纸、特效等）</li>
+    <li><strong>时间线区域</strong> — 视频和音频的轨道，拖动播放头定位</li>
+    <li><strong>右上角导出按钮</strong> — 完成后导出视频</li>
+  </ul>`,
+svg:s(`${PF}
+  <rect x="26" y="50" width="128" height="80" rx="4" fill="rgba(255,255,255,.03)"/>
+  <text x="90" y="95" text-anchor="middle" fill="rgba(255,255,255,.08)" font-size="7" font-family="DM Mono">预览区</text>
+  <rect x="26" y="140" width="128" height="40" rx="3" fill="rgba(124,92,231,.06)"/>
+  <rect x="30" y="145" width="55" height="30" rx="3" fill="rgba(124,92,231,.15)"/>
+  <rect x="89" y="145" width="30" height="30" rx="3" fill="rgba(0,212,255,.10)"/>
+  <rect x="123" y="145" width="27" height="30" rx="3" fill="rgba(253,121,168,.08)"/>
+  <line x1="90" y1="132" x2="90" y2="148" stroke="var(--accent2)" stroke-width="1.5"/>
+  <rect x="26" y="192" width="128" height="44" rx="3" fill="rgba(255,255,255,.02)" stroke="rgba(255,255,255,.04)" stroke-width=".5"/>
+  ${[0,1,2,3].map(i=>`<rect x="${30+i*30}" y="198" width="26" height="16" rx="2" fill="rgba(124,92,231,${.06+i*0.03})"/>`).join('')}
+  ${['✂','🎵','T','✨'].map((t,i)=>`<text x="${43+i*30}" y="260" text-anchor="middle" fill="rgba(255,255,255,.12)" font-size="8">${t}</text>`).join('')}
+`)},
+
+// ---- 19 新建项目 ----
+{type:'content',badge:'剪映入门',title:'新建<em>剪辑项目</em>',html:`
+  <p class="sub">开始创作的第一步</p>
+  <ul class="nums">
+    <li>打开剪映，首页点击<strong>「开始创作」</strong>按钮</li>
+    <li>进入素材选择界面，勾选你需要的<strong>视频和照片</strong></li>
+    <li>可以选择多个素材，后期再调整顺序</li>
+    <li>选好后点击<strong>「添加」</strong>，进入剪辑界面</li>
+  </ul>
+  <div class="gcard"><p>提示：也可以直接使用剪映丰富的模板，导入素材一键生成</p></div>`,
+svg:s(`${PF}
+  <rect x="50" y="80" width="80" height="80" rx="16" fill="rgba(124,92,231,.08)" stroke="rgba(124,92,231,.18)" stroke-width="1.5"/>
+  <line x1="90" y1="105" x2="90" y2="135" stroke="rgba(124,92,231,.4)" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="75" y1="120" x2="105" y2="120" stroke="rgba(124,92,231,.4)" stroke-width="2.5" stroke-linecap="round"/>
+  <text x="90" y="178" text-anchor="middle" fill="rgba(255,255,255,.12)" font-size="8" font-family="DM Mono">开始创作</text>
+  <rect x="34" y="200" width="38" height="38" rx="4" fill="rgba(0,212,255,.08)" stroke="rgba(0,212,255,.15)" stroke-width=".5"/>
+  <rect x="76" y="200" width="38" height="38" rx="4" fill="rgba(253,121,168,.06)" stroke="rgba(253,121,168,.12)" stroke-width=".5"/>
+  <rect x="118" y="200" width="26" height="38" rx="4" fill="rgba(255,255,255,.03)"/>
+  <circle cx="131" cy="219" r="6" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="1"/>
+`)},
+
+// ---- 20 导入素材 ----
+{type:'content',badge:'剪映入门',title:'导入<em>素材</em>',html:`
+  <p class="sub">把手机中的视频和照片导入剪映</p>
+  <ul class="bullets">
+    <li>在素材选择页面，可按<strong>「视频」「照片」「实况」</strong>分类浏览</li>
+    <li>点击素材右上角<strong>圆圈</strong>进行勾选</li>
+    <li>可多选，选中后底部显示<strong>已选数量</strong></li>
+    <li>支持从 <strong>iCloud / 云盘</strong>导入素材</li>
+    <li>进入剪辑后，也可随时通过「+」号<strong>追加素材</strong></li>
+  </ul>`,
+svg:s(`${PF}
+  <rect x="26" y="50" width="128" height="16" rx="3" fill="rgba(255,255,255,.03)"/>
+  <text x="40" y="61" fill="rgba(255,255,255,.15)" font-size="6" font-family="DM Mono">全部</text>
+  <text x="65" y="61" fill="rgba(124,92,231,.3)" font-size="6" font-family="DM Mono">视频</text>
+  <text x="90" y="61" fill="rgba(255,255,255,.15)" font-size="6" font-family="DM Mono">照片</text>
+  ${[[28,72,36,28],[68,72,36,28],[108,72,36,28],[28,104,36,28],[68,104,36,28],[108,104,36,28],[28,136,36,28],[68,136,36,28],[108,136,36,28]].map(([x,y,w,h],i)=>
+    `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="3" fill="rgba(${i%3===0?'124,92,231':i%3===1?'0,212,255':'253,121,168'},.${06+i%3*2})"/>
+     ${i===0||i===4?`<circle cx="${x+w-4}" y="${y+4}" r="5" fill="rgba(124,92,231,.6)"/><polyline points="${x+w-7},${y+4} ${x+w-4},${y+7} ${x+w-1},${y+1}" fill="none" stroke="#fff" stroke-width="1"/>`:''}`
+  ).join('')}
+  <rect x="26" y="175" width="128" height="26" rx="13" fill="rgba(124,92,231,.15)"/>
+  <text x="90" y="191" text-anchor="middle" fill="rgba(124,92,231,.5)" font-size="8" font-weight="600" font-family="DM Mono">添加 (3)</text>
+`)},
+
+// ---- 21 时间线基础 ----
+{type:'content',badge:'剪映入门',title:'认识<em>时间线</em>',html:`
+  <p class="sub">时间线是剪辑的核心操作区域</p>
+  <ul class="bullets">
+    <li><strong>播放头</strong>（竖线）— 标记当前播放位置，可左右拖动</li>
+    <li><strong>视频轨道</strong> — 按时间顺序排列的素材片段</li>
+    <li><strong>音频轨道</strong> — 位于视频轨道下方</li>
+    <li>双指<strong>捏合缩放</strong>时间线，方便精细编辑</li>
+    <li>点击片段可<strong>选中</strong>，选中后可进行操作</li>
+  </ul>`,
+svg:s(`${PF}
+  <rect x="26" y="55" width="128" height="70" rx="4" fill="rgba(255,255,255,.03)"/>
+  <text x="90" y="95" text-anchor="middle" fill="rgba(255,255,255,.06)" font-size="7" font-family="DM Mono">预览窗口</text>
+  <rect x="26" y="135" width="128" height="32" rx="3" fill="rgba(255,255,255,.02)"/>
+  <rect x="30" y="138" width="36" height="26" rx="3" fill="rgba(124,92,231,.18)"/>
+  <rect x="69" y="138" width="40" height="26" rx="3" fill="rgba(0,212,255,.12)"/>
+  <rect x="112" y="138" width="38" height="26" rx="3" fill="rgba(253,121,168,.10)"/>
+  <line x1="80" y1="130" x2="80" y2="175" stroke="var(--accent2)" stroke-width="1.5"/>
+  <polygon points="77,130 83,130 80,126" fill="var(--accent2)"/>
+  <rect x="26" y="172" width="128" height="18" rx="3" fill="rgba(255,255,255,.015)"/>
+  <rect x="30" y="174" width="50" height="14" rx="2" fill="rgba(85,230,193,.08)"/>
+  <rect x="84" y="174" width="40" height="14" rx="2" fill="rgba(85,230,193,.06)"/>
+  <text x="36" y="210" fill="rgba(255,255,255,.10)" font-size="6" font-family="DM Mono">← 双指缩放 →</text>
+`)},
+
+// ---- 22 预览与撤销 ----
+{type:'content',badge:'剪映入门',title:'预览与<em>撤销</em>',html:`
+  <p class="sub">随时预览效果，做错了可以撤销</p>
+  <ul class="bullets">
+    <li><strong>播放/暂停</strong> — 点击预览区或底部播放按钮</li>
+    <li><strong>全屏预览</strong> — 双指张开预览区，查看大画面</li>
+    <li><strong>撤销</strong> — 双指向左滑动（类似「后退」手势），或点击顶部 ↩ 图标</li>
+    <li><strong>重做</strong> — 双指向右滑动，恢复上一步操作</li>
+  </ul>
+  <div class="gcard"><p>养成好习惯：每做几步操作就预览一下效果</p></div>`,
+svg:s(`${PF}
+  <circle cx="90" cy="110" r="32" fill="rgba(124,92,231,.06)" stroke="rgba(124,92,231,.15)" stroke-width="1"/>
+  <polygon points="82,96 104,110 82,124" fill="rgba(124,92,231,.35)"/>
+  <rect x="45" y="155" width="90" height="28" rx="14" fill="rgba(255,255,255,.03)" stroke="rgba(255,255,255,.06)" stroke-width=".5"/>
+  <text x="90" y="172" text-anchor="middle" fill="rgba(255,255,255,.18)" font-size="9">↩</text>
+  <text x="90" y="172" text-anchor="middle" fill="rgba(255,255,255,.08)" font-size="6" font-family="DM Mono" dx="30">撤销</text>
+  <path d="M50,210 Q70,195 90,210" fill="none" stroke="rgba(0,212,255,.15)" stroke-width="1.5"/>
+  <path d="M50,220 Q70,205 90,220" fill="none" stroke="rgba(0,212,255,.08)" stroke-width="1"/>
+  <polygon points="86,207 90,210 86,213" fill="rgba(0,212,255,.2)"/>
+`)},
+
+// ---- 23 SECTION: 基础剪辑 ----
+{type:'section',num:'04',title:'基础剪辑操作',sub:'掌握最常用的剪辑手法',svg:s(`
+  <line x1="20" y1="170" x2="160" y2="170" stroke="rgba(255,255,255,.06)" stroke-width="1"/>
+  <rect x="20" y="100" width="45" height="55" rx="6" fill="rgba(124,92,231,.12)"/>
+  <rect x="72" y="100" width="36" height="55" rx="6" fill="rgba(0,212,255,.10)"/>
+  <rect x="115" y="100" width="45" height="55" rx="6" fill="rgba(253,121,168,.08)"/>
+  <rect x="20" y="180" width="55" height="40" rx="5" fill="rgba(85,230,193,.08)"/>
+  <rect x="82" y="180" width="35" height="40" rx="5" fill="rgba(241,196,15,.08)"/>
+  <rect x="124" y="180" width="36" height="40" rx="5" fill="rgba(124,92,231,.06)"/>
+  <line x1="90" y1="90" x2="90" y2="230" stroke="rgba(0,212,255,.2)" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <text x="90" y="258" text-anchor="middle" fill="rgba(255,255,255,.08)" font-size="8" font-family="DM Mono">TIMELINE</text>
+`)},
+
+// ---- 24 分割工具 ----
+{type:'content',badge:'基础剪辑',title:'分割工具：<em>切割片段</em>',html:`
+  <p class="sub">最常用的工具：在指定位置把视频一分为二</p>
+  <ul class="nums">
+    <li>拖动播放头到要<strong>切割的位置</strong></li>
+    <li>点击底部工具栏<strong>「分割」</strong>按钮（剪刀图标 ✂）</li>
+    <li>视频在该位置被<strong>一分为二</strong>，变成两个独立片段</li>
+    <li>可以分别对每个片段进行操作</li>
+  </ul>
+  <div class="gcard"><p>技巧：放大时间线可以更精确地定位切割点</p></div>`,
+svg:s(`${PF}
+  <rect x="26" y="120" width="128" height="45" rx="4" fill="rgba(255,255,255,.02)"/>
+  <rect x="28" y="124" width="58" height="37" rx="3" fill="rgba(124,92,231,.15)"/>
+  <rect x="90" y="124" width="62" height="37" rx="3" fill="rgba(0,212,255,.10)"/>
+  <line x1="86" y1="112" x2="86" y2="178" stroke="var(--accent)" stroke-width="2"/>
+  <text x="86" y="108" text-anchor="middle" fill="var(--accent)" font-size="12">✂</text>
+  <text x="57" y="146" text-anchor="middle" fill="rgba(255,255,255,.15)" font-size="7" font-family="DM Mono">片段 1</text>
+  <text x="121" y="146" text-anchor="middle" fill="rgba(255,255,255,.15)" font-size="7" font-family="DM Mono">片段 2</text>
+  <rect x="40" y="190" width="100" height="28" rx="14" fill="rgba(124,92,231,.12)"/>
+  <text x="90" y="207" text-anchor="middle" fill="rgba(124,92,231,.4)" font-size="8" font-family="DM Mono">✂ 分割</text>
+`)},
+
+// ---- 25 删除片段 ----
+{type:'content',badge:'基础剪辑',title:'<em>删除</em>不需要的片段',html:`
+  <p class="sub">快速去掉不需要的内容</p>
+  <ul class="nums">
+    <li>在时间线上<strong>点击</strong>要删除的片段</li>
+    <li>片段被选中（通常高亮显示）</li>
+    <li>点击底部<strong>「删除」</strong>按钮，或直接向下滑动片段</li>
+    <li>后面的片段会自动前移，无缝衔接</li>
+  </ul>
+  <div class="gcard"><p>删除后可以撤销恢复，不用怕误删</p></div>`,
+svg:s(`${PF}
+  <rect x="26" y="125" width="128" height="40" rx="4" fill="rgba(255,255,255,.02)"/>
+  <rect x="30" y="129" width="38" height="32" rx="3" fill="rgba(124,92,231,.15)"/>
+  <rect x="72" y="129" width="38" height="32" rx="3" fill="rgba(253,121,168,.12)" stroke="rgba(253,121,168,.3)" stroke-width="1" stroke-dasharray="3,2"/>
+  <rect x="114" y="129" width="36" height="32" rx="3" fill="rgba(0,212,255,.12)"/>
+  <line x1="77" y1="133" x2="105" y2="157" stroke="rgba(253,121,168,.4)" stroke-width="1.5"/>
+  <line x1="105" y1="133" x2="77" y2="157" stroke="rgba(253,121,168,.4)" stroke-width="1.5"/>
+  <text x="90" y="185" text-anchor="middle" fill="rgba(253,121,168,.25)" font-size="7" font-family="DM Mono">选中 → 删除</text>
+  <line x1="30" y1="200" x2="150" y2="200" stroke="rgba(255,255,255,.03)" stroke-width="1"/>
+  <text x="90" y="215" text-anchor="middle" fill="rgba(255,255,255,.08)" font-size="6" font-family="DM Mono">删除后自动合并 →</text>
+  <rect x="30" y="225" width="38" height="20" rx="3" fill="rgba(124,92,231,.10)"/>
+  <rect x="72" y="225" width="36" height="20" rx="3" fill="rgba(0,212,255,.08)"/>
+`)},
+
+// ---- 26 调整顺序 ----
+{type:'content',badge:'基础剪辑',title:'调整片段<em>顺序</em>',html:`
+  <p class="sub">自由调整视频片段的先后顺序</p>
+  <ul class="nums">
+    <li>长按要移动的片段，片段会<strong>浮起</strong></li>
+    <li>保持按住，<strong>拖动</strong>到目标位置</li>
+    <li>其他片段会自动让位</li>
+    <li>松手即完成排序</li>
+  </ul>`,
+svg:s(`${PF}
+  <rect x="26" y="95" width="128" height="45" rx="4" fill="rgba(255,255,255,.02)"/>
+  <rect x="30" y="99" width="36" height="37" rx="3" fill="rgba(124,92,231,.15)"/>
+  <text x="48" y="121" text-anchor="middle" fill="rgba(255,255,255,.15)" font-size="7" font-family="DM Mono">A</text>
+  <rect x="70" y="99" width="40" height="37" rx="3" fill="rgba(0,212,255,.12)"/>
+  <text x="90" y="121" text-anchor="middle" fill="rgba(255,255,255,.15)" font-size="7" font-family="DM Mono">B</text>
+  <rect x="114" y="99" width="36" height="37" rx="3" fill="rgba(253,121,168,.10)"/>
+  <text x="132" y="121" text-anchor="middle" fill="rgba(255,255,255,.15)" font-size="7" font-family="DM Mono">C</text>
+  <path d="M48,95 L48,80 L132,80 L132,95" fill="none" stroke="rgba(124,92,231,.3)" stroke-width="1.5" marker-end="url(#arr)"/>
+  <polygon points="129,92 135,92 132,97" fill="rgba(124,92,231,.3)"/>
+  <text x="90" y="165" text-anchor="middle" fill="rgba(255,255,255,.08)" font-size="7" font-family="DM Mono">拖动 A 到 C 的位置</text>
+  <rect x="26" y="180" width="128" height="32" rx="4" fill="rgba(255,255,255,.02)"/>
+  <rect x="30" y="184" width="36" height="24" rx="3" fill="rgba(0,212,255,.10)"/>
+  <rect x="70" y="184" width="40" height="24" rx="3" fill="rgba(253,121,168,.08)"/>
+  <rect x="114" y="184" width="36" height="24" rx="3" fill="rgba(124,92,231,.12)"/>
+  <text x="48" y="199" text-anchor="middle" fill="rgba(255,255,255,.1)" font-size="6">B</text>
+  <text x="90" y="199" text-anchor="middle" fill="rgba(255,255,255,.1)" font-size="6">C</text>
+  <text x="132" y="199" text-anchor="middle" fill="rgba(255,255,255,.1)" font-size="6">A</text>
+`)},
+
+// ---- 27 调整时长 ----
+{type:'content',badge:'基础剪辑',title:'调整片段<em>时长</em>',html:`
+  <p class="sub">精确控制每个片段的持续时间</p>
+  <ul class="nums">
+    <li>选中一个片段，拖动片段<strong>左右边缘</strong></li>
+    <li>向内拖 → 缩短时长</li>
+    <li>向外拖 → 延长时长（需有足够素材）</li>
+    <li>适用于微调节奏、对齐音乐节拍</li>
+  </ul>
+  <div class="gcard"><p>照片片段可以自由设置时长（默认3秒），视频则受原始时长限制</p></div>`,
+svg:s(`${PF}
+  <rect x="26" y="120" width="128" height="40" rx="4" fill="rgba(255,255,255,.02)"/>
+  <rect x="38" y="124" width="104" height="32" rx="3" fill="rgba(124,92,231,.12)"/>
+  <line x1="38" y1="124" x2="38" y2="156" stroke="var(--accent)" stroke-width="3" stroke-linecap="round"/>
+  <line x1="142" y1="124" x2="142" y2="156" stroke="var(--accent)" stroke-width="3" stroke-linecap="round"/>
+  <path d="M38,140 L28,140" stroke="rgba(255,255,255,.15)" stroke-width="1" marker-start="url(#arr)"/>
+  <path d="M142,140 L152,140" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
+  <text x="90" y="143" text-anchor="middle" fill="rgba(255,255,255,.12)" font-size="7" font-family="DM Mono">拖动边缘</text>
+  <text x="90" y="185" text-anchor="middle" fill="rgba(255,255,255,.08)" font-size="7" font-family="DM Mono">← 缩短 | 延长 →</text>
+`)},
+
+// ---- 28 变速 ----
+{type:'content',badge:'基础剪辑',title:'<em>变速</em>：快放与慢放',html:`
+  <p class="sub">改变视频播放速度，营造不同效果</p>
+  <ul class="nums">
+    <li>选中片段，点击底部<strong>「变速」</strong></li>
+    <li><strong>常规变速</strong>：0.1x ~ 100x，整体变快/变慢</li>
+    <li><strong>曲线变速</strong>：自定义速度变化，做出忽快忽慢的效果</li>
+    <li>慢放适合<strong>高光时刻</strong>，快进适合<strong>无聊片段</strong></li>
+  </ul>
+  <div class="gcard"><p>技巧：60fps 素材放慢到 0.5x，依然丝滑流畅</p></div>`,
+svg:s(`${PF}
+  <rect x="26" y="90" width="128" height="90" rx="6" fill="rgba(255,255,255,.02)"/>
+  <text x="34" y="106" fill="rgba(255,255,255,.08)" font-size="6" font-family="DM Mono">速度</text>
+  <path d="M36,150 Q60,150 75,120 T110,110 Q130,110 146,140" fill="none" stroke="rgba(124,92,231,.35)" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="36" cy="150" r="3" fill="rgba(124,92,231,.5)"/>
+  <circle cx="75" cy="120" r="3" fill="rgba(0,212,255,.4)"/>
+  <circle cx="110" cy="110" r="3" fill="rgba(124,92,231,.5)"/>
+  <circle cx="146" cy="140" r="3" fill="rgba(0,212,255,.4)"/>
+  <line x1="30" y1="130" x2="150" y2="130" stroke="rgba(255,255,255,.05)" stroke-width=".5" stroke-dasharray="2,2"/>
+  <text x="155" y="133" fill="rgba(255,255,255,.08)" font-size="5" font-family="DM Mono">1x</text>
+  <text x="50" y="170" fill="rgba(0,212,255,.2)" font-size="6" font-family="DM Mono">慢</text>
+  <text x="125" y="108" fill="rgba(124,92,231,.25)" font-size="6" font-family="DM Mono">快</text>
+`)},
+
+// ---- 29 倒放 ----
+{type:'content',badge:'基础剪辑',title:'<em>倒放</em>效果',html:`
+  <p class="sub">让视频从后往前播放，创造有趣的视觉效果</p>
+  <ul class="nums">
+    <li>选中片段，点击底部<strong>「倒放」</strong></li>
+    <li>剪映会自动处理，生成<strong>倒序</strong>视频</li>
+    <li>处理时间取决于视频时长，需要稍等</li>
+  </ul>
+  <div class="gcard"><p>适合场景：水花回弹、物体复原、时间倒流等创意效果</p></div>`,
+svg:s(`${PF}
+  <circle cx="90" cy="130" r="40" fill="none" stroke="rgba(124,92,231,.1)" stroke-width="1"/>
+  <path d="M90,90 A40,40 0 0,1 130,130" fill="none" stroke="rgba(124,92,231,.3)" stroke-width="2"/>
+  <polygon points="127,125 133,130 127,135" fill="rgba(124,92,231,.3)"/>
+  <path d="M130,130 A40,40 0 0,1 90,170" fill="none" stroke="rgba(0,212,255,.25)" stroke-width="2"/>
+  <polygon points="93,167 87,170 93,175" fill="rgba(0,212,255,.25)"/>
+  <text x="90" y="134" text-anchor="middle" fill="rgba(255,255,255,.12)" font-size="8" font-family="DM Mono">倒放</text>
+  <text x="90" y="200" text-anchor="middle" fill="rgba(255,255,255,.08)" font-size="7" font-family="DM Mono">1→2→3 变成 3→2→1</text>
+`)},
+
+// ---- 30 SECTION: 文字与贴纸 ----
+{type:'section',num:'05',title:'文字与贴纸',sub:'让你的视频信息更丰富、更有趣',svg:s(`
+  <rect x="30" y="80" width="120" height="50" rx="6" fill="rgba(124,92,231,.08)" stroke="rgba(124,92,231,.15)" stroke-width="1"/>
+  <text x="90" y="110" text-anchor="middle" fill="rgba(124,92,231,.3)" font-size="14" font-weight="700" font-family="Outfit">标题文字</text>
+  <rect x="50" y="145" width="80" height="20" rx="4" fill="rgba(0,212,255,.06)"/>
+  <text x="90" y="159" text-anchor="middle" fill="rgba(0,212,255,.2)" font-size="8" font-family="DM Mono">字幕文字</text>
+  <circle cx="45" cy="200" r="12" fill="rgba(253,121,168,.10)"/>
+  <text x="45" y="204" text-anchor="middle" fill="rgba(253,121,168,.3)" font-size="12">★</text>
+  <circle cx="90" cy="210" r="15" fill="rgba(253,203,110,.08)"/>
+  <text x="90" y="215" text-anchor="middle" fill="rgba(253,203,110,.25)" font-size="14">♥</text>
+  <circle cx="135" cy="198" r="10" fill="rgba(85,230,193,.08)"/>
+  <text x="135" y="202" text-anchor="middle" fill="rgba(85,230,193,.25)" font-size="11">✦</text>
+`)},
+
+// ---- 31 添加文字 ----
+{type:'content',badge:'文字与贴纸',title:'<em>添加文字</em>到视频',html:`
+  <p class="sub">给视频添加标题、说明、字幕</p>
+  <ul class="nums">
+    <li>点击底部工具栏<strong>「文字」</strong>按钮</li>
+    <li>选择<strong>「新建文本」</strong></li>
+    <li>在输入框中<strong>输入文字内容</strong></li>
+    <li>文字出现在预览区，可<strong>拖动位置、缩放大小</strong></li>
+    <li>在时间线上可以调整文字<strong>出现的时长</strong></li>
+  </ul>`,
+svg:s(`${PF}
+  <rect x="26" y="55" width="128" height="80" rx="4" fill="rgba(255,255,255,.03)"/>
+  <rect x="40" y="80" width="100" height="30" rx="4" fill="rgba(124,92,231,.15)" stroke="rgba(124,92,231,.3)" stroke-width="1" stroke-dasharray="3,2"/>
+  <text x="90" y="100" text-anchor="middle" fill="rgba(124,92,231,.5)" font-size="11" font-weight="600" font-family="Outfit">输入文字</text>
+  <rect x="26" y="145" width="128" height="24" rx="3" fill="rgba(255,255,255,.02)"/>
+  <rect x="30" y="149" width="60" height="16" rx="2" fill="rgba(124,92,231,.10)"/>
+  <text x="60" y="160" text-anchor="middle" fill="rgba(124,92,231,.3)" font-size="6" font-family="DM Mono">文字轨道</text>
+  <rect x="30" y="180" width="120" height="32" rx="16" fill="rgba(124,92,231,.10)"/>
+  <text x="90" y="199" text-anchor="middle" fill="rgba(124,92,231,.35)" font-size="9" font-family="DM Mono">T 新建文本</text>
+`)},
+
+// ---- 32 文字样式 ----
+{type:'content',badge:'文字与贴纸',title:'文字<em>样式与动画</em>',html:`
+  <p class="sub">让文字更好看</p>
+  <ul class="bullets">
+    <li><strong>字体</strong> — 多种字体可选，找到适合视频风格的</li>
+    <li><strong>颜色</strong> — 改变文字颜色，注意和背景的对比度</li>
+    <li><strong>描边/阴影</strong> — 增加文字可读性，推荐白色+黑色描边</li>
+    <li><strong>花字</strong> — 预设的艺术字样式，一键应用</li>
+    <li><strong>动画</strong> — 入场/出场动画（渐显、弹跳、打字机效果等）</li>
+  </ul>`,
+svg:s(`${PF}
+  <text x="50" y="75" fill="rgba(255,255,255,.25)" font-size="12" font-weight="700" font-family="Outfit">普通文字</text>
+  <text x="50" y="100" fill="rgba(124,92,231,.4)" font-size="14" font-weight="800" font-family="Outfit" stroke="rgba(124,92,231,.2)" stroke-width=".5">描边文字</text>
+  <text x="50" y="125" fill="rgba(0,212,255,.35)" font-size="11" font-style="italic" font-family="Outfit">花 字 效 果</text>
+  <rect x="40" y="140" width="100" height="24" rx="12" fill="rgba(253,121,168,.12)"/>
+  <text x="90" y="156" text-anchor="middle" fill="rgba(253,121,168,.4)" font-size="10" font-weight="600" font-family="Outfit">渐显动画 →</text>
+  <rect x="30" y="180" width="120" height="50" rx="6" fill="rgba(255,255,255,.02)" stroke="rgba(255,255,255,.05)" stroke-width=".5"/>
+  <text x="90" y="195" text-anchor="middle" fill="rgba(255,255,255,.08)" font-size="6" font-family="DM Mono">样式</text>
+  <rect x="38" y="205" width="16" height="16" rx="3" fill="rgba(124,92,231,.2)"/>
+  <rect x="58" y="205" width="16" height="16" rx="3" fill="rgba(0,212,255,.15)"/>
+  <rect x="78" y="205" width="16" height="16" rx="3" fill="rgba(253,121,168,.12)"/>
+  <rect x="98" y="205" width="16" height="16" rx="3" fill="rgba(253,203,110,.12)"/>
+  <rect x="118" y="205" width="16" height="16" rx="3" fill="rgba(85,230,193,.10)"/>
+`)},
+
+// ---- 33 自动字幕 ----
+{type:'content',badge:'文字与贴纸',title:'<em>自动识别字幕</em>',html:`
+  <p class="sub">剪映最强大的功能之一：AI 自动识别语音生成字幕</p>
+  <ul class="nums">
+    <li>点击<strong>「文字」→「识别字幕」→「开始识别」</strong></li>
+    <li>等待 AI 分析（通常几秒到几十秒）</li>
+    <li>自动生成带<strong>时间戳</strong>的字幕文本</li>
+    <li>点击字幕可<strong>逐条校对修改</strong>错别字</li>
+    <li>支持批量修改<strong>字幕样式</strong></li>
+  </ul>
+  <div class="gcard"><p>识别准确率很高，但建议花2分钟校对一遍</p></div>`,
+svg:s(`${PF}
+  <rect x="26" y="60" width="128" height="75" rx="4" fill="rgba(255,255,255,.02)"/>
+  <rect x="36" y="80" width="108" height="18" rx="4" fill="rgba(124,92,231,.10)"/>
+  <text x="90" y="93" text-anchor="middle" fill="rgba(124,92,231,.35)" font-size="8" font-family="DM Mono">今天教大家...</text>
+  <rect x="36" y="102" width="85" height="14" rx="3" fill="rgba(0,212,255,.06)"/>
+  <text x="78" y="112" text-anchor="middle" fill="rgba(0,212,255,.25)" font-size="6" font-family="DM Mono">学习剪辑</text>
+  <circle cx="90" cy="170" r="22" fill="rgba(124,92,231,.06)" stroke="rgba(124,92,231,.15)" stroke-width="1"/>
+  <text x="90" y="174" text-anchor="middle" fill="rgba(124,92,231,.3)" font-size="12">AI</text>
+  <text x="90" y="210" text-anchor="middle" fill="rgba(255,255,255,.10)" font-size="7" font-family="DM Mono">自动识别语音</text>
+  <path d="M68,155 Q90,145 112,155" fill="none" stroke="rgba(124,92,231,.12)" stroke-width="1"/>
+`)},
+
+// ---- 34 贴纸 ----
+{type:'content',badge:'文字与贴纸',title:'<em>贴纸与表情</em>',html:`
+  <p class="sub">用贴纸让视频更生动有趣</p>
+  <ul class="bullets">
+    <li>点击<strong>「贴纸」</strong>，浏览海量贴纸资源</li>
+    <li>支持<strong>搜索</strong>关键词找贴纸（如：点赞、哭、爱心）</li>
+    <li>贴纸可以<strong>拖动、缩放、旋转</strong></li>
+    <li>在时间线上调整贴纸的<strong>出现时长和位置</strong></li>
+    <li>可以叠加多个贴纸，做出丰富的效果</li>
+  </ul>`,
+svg:s(`${PF}
+  <text x="55" y="80" font-size="28" opacity=".3">😂</text>
+  <text x="100" y="95" font-size="22" opacity=".25">❤️</text>
+  <text x="40" y="120" font-size="18" opacity=".2">⭐</text>
+  <text x="110" y="125" font-size="24" opacity=".25">🔥</text>
+  <text x="75" y="150" font-size="26" opacity=".3">👍</text>
+  <text x="45" y="180" font-size="16" opacity=".2">🎵</text>
+  <text x="115" y="175" font-size="20" opacity=".2">✨</text>
+  <rect x="30" y="200" width="120" height="50" rx="6" fill="rgba(255,255,255,.03)" stroke="rgba(255,255,255,.05)" stroke-width=".5"/>
+  <text x="90" y="218" text-anchor="middle" fill="rgba(255,255,255,.08)" font-size="6" font-family="DM Mono">贴纸库</text>
+  <rect x="40" y="228" width="20" height="16" rx="3" fill="rgba(253,121,168,.08)"/>
+  <rect x="65" y="228" width="20" height="16" rx="3" fill="rgba(253,203,110,.08)"/>
+  <rect x="90" y="228" width="20" height="16" rx="3" fill="rgba(85,230,193,.06)"/>
+  <rect x="115" y="228" width="20" height="16" rx="3" fill="rgba(124,92,231,.06)"/>
+`)},
+
+// ---- 35 SECTION: 音频 ----
+{type:'section',num:'06',title:'音频处理',sub:'音乐和声音是视频的灵魂',svg:s(`
+  <circle cx="90" cy="170" r="60" fill="none" stroke="rgba(124,92,231,.08)" stroke-width="1"/>
+  <circle cx="90" cy="170" r="40" fill="none" stroke="rgba(0,212,255,.06)" stroke-width="1"/>
+  <text x="90" y="165" text-anchor="middle" fill="rgba(124,92,231,.25)" font-size="36">♪</text>
+  <text x="90" y="195" text-anchor="middle" fill="rgba(0,212,255,.15)" font-size="18">♫</text>
+  ${[0,1,2,3,4].map(i=>`<rect x="${55+i*16}" y="${240+Math.sin(i)*8}" width="8" height="${15+Math.cos(i*2)*8}" rx="4" fill="rgba(124,92,231,${.08+i*0.03})"/>`).join('')}
+`)},
+
+// ---- 36 背景音乐 ----
+{type:'content',badge:'音频处理',title:'添加<em>背景音乐</em>',html:`
+  <p class="sub">剪映内置海量免费音乐库</p>
+  <ul class="nums">
+    <li>点击底部<strong>「音频」→「音乐」</strong></li>
+    <li>浏览推荐或<strong>搜索</strong>想要的歌曲</li>
+    <li>点击<strong>「使用」</strong>，音乐自动添加到音频轨道</li>
+    <li>拖动音乐轨道调整<strong>起始位置</strong></li>
+    <li>可以裁剪音乐长度，与视频匹配</li>
+  </ul>
+  <div class="gcard"><p>提示：剪映音乐库中的音乐可以免费用于抖音发布</p></div>`,
+svg:s(`${PF}
+  <rect x="26" y="55" width="128" height="14" rx="3" fill="rgba(255,255,255,.03)"/>
+  <text x="40" y="64" fill="rgba(255,255,255,.12)" font-size="6" font-family="DM Mono">推荐</text>
+  <text x="65" y="64" fill="rgba(124,92,231,.3)" font-size="6" font-family="DM Mono">搜索</text>
+  <text x="95" y="64" fill="rgba(255,255,255,.12)" font-size="6" font-family="DM Mono">收藏</text>
+  ${[0,1,2,3].map(i=>`<rect x="28" y="${78+i*26}" width="124" height="22" rx="4" fill="rgba(255,255,255,.02)"/>
+  <circle cx="40" cy="${89+i*26}" r="7" fill="rgba(124,92,231,.10)"/>
+  <text x="40" y="${92+i*26}" text-anchor="middle" fill="rgba(124,92,231,.3)" font-size="8">♪</text>
+  <rect x="52" y="${84+i*26}" width="60" height="8" rx="2" fill="rgba(255,255,255,.04)"/>
+  <rect x="52" y="${84+i*26}" width="${30+i*10}" height="8" rx="2" fill="rgba(255,255,255,.06)"/>
+  <rect x="120" y="${84+i*26}" width="24" height="14" rx="7" fill="rgba(124,92,231,.12)"/>
+  <text x="132" y="${93+i*26}" text-anchor="middle" fill="rgba(124,92,231,.3)" font-size="5" font-family="DM Mono">使用</text>`).join('')}
+`)},
+
+// ---- 37 音效 ----
+{type:'content',badge:'音频处理',title:'使用<em>音效</em>',html:`
+  <p class="sub">给特定时刻添加趣味音效</p>
+  <ul class="bullets">
+    <li>点击<strong>「音频」→「音效」</strong></li>
+    <li>分类浏览：搞笑、自然、转场、综艺、游戏等</li>
+    <li>试听后点击<strong>「使用」</strong>添加到时间线</li>
+    <li>拖动到视频对应位置，实现<strong>声画同步</strong></li>
+  </ul>
+  <div class="gcard"><p>热门音效：鼓点、嗖、叮、转场whoosh、综艺效果音</p></div>`,
+svg:s(`${PF}
+  ${['🔔','💨','🥁','💫','🌊'].map((e,i)=>`<rect x="30" y="${60+i*34}" width="120" height="28" rx="6" fill="rgba(255,255,255,.02)"/>
+  <text x="44" y="${79+i*34}" fill="rgba(124,92,231,.25)" font-size="12">${e}</text>
+  <rect x="62" y="${68+i*34}" width="60" height="12" rx="2" fill="rgba(255,255,255,.03)"/>
+  <rect x="62" y="${68+i*34}" width="${20+i*8}" height="12" rx="2" fill="rgba(${i%2===0?'124,92,231':'0,212,255'},.12)"/>
+  <circle cx="138" cy="${74+i*34}" r="7" fill="rgba(124,92,231,.08)"/>
+  <polygon points="135,${71+i*34} 142,${74+i*34} 135,${77+i*34}" fill="rgba(124,92,231,.25)"/>`).join('')}
+`)},
+
+// ---- 38 旁白录音 ----
+{type:'content',badge:'音频处理',title:'<em>录制旁白</em>',html:`
+  <p class="sub">边看视频边录解说，做自己的配音</p>
+  <ul class="nums">
+    <li>点击<strong>「音频」→「录音」</strong></li>
+    <li>播放头放在开始录音的位置</li>
+    <li>按住<strong>录音按钮</strong>，对着手机说话</li>
+    <li>松手结束录音，音频自动添加到时间线</li>
+    <li>可以录制多段旁白，分段添加</li>
+  </ul>
+  <div class="gcard"><p>建议：在安静的环境录音，效果更好</p></div>`,
+svg:s(`${PF}
+  <circle cx="90" cy="120" r="30" fill="rgba(253,121,168,.06)" stroke="rgba(253,121,168,.12)" stroke-width="1"/>
+  <rect x="84" y="100" width="12" height="28" rx="6" fill="rgba(253,121,168,.20)"/>
+  <rect x="80" y="128" width="20" height="4" rx="2" fill="rgba(253,121,168,.15)"/>
+  <line x1="90" y1="132" x2="90" y2="140" stroke="rgba(253,121,168,.12)" stroke-width="2"/>
+  <line x1="80" y1="140" x2="100" y2="140" stroke="rgba(253,121,168,.12)" stroke-width="2" stroke-linecap="round"/>
+  ${[0,1,2].map(i=>`<circle cx="90" cy="120" r="${40+i*12}" fill="none" stroke="rgba(253,121,168,${.06-i*0.015})" stroke-width=".5"/>`).join('')}
+  <rect x="40" y="175" width="100" height="32" rx="16" fill="rgba(253,121,168,.10)"/>
+  <text x="90" y="194" text-anchor="middle" fill="rgba(253,121,168,.35)" font-size="8" font-family="DM Mono">🎤 按住录音</text>
+`)},
+
+// ---- 39 音量调节 ----
+{type:'content',badge:'音频处理',title:'<em>音量调节</em>与淡入淡出',html:`
+  <p class="sub">精细控制视频原声、音乐、旁白的音量平衡</p>
+  <ul class="bullets">
+    <li>选中音频片段，点击<strong>「音量」</strong>滑块调节</li>
+    <li>建议：BGM 音量 <strong>30-50%</strong>，不要盖过人声</li>
+    <li>选中音频，点击<strong>「淡化」</strong>添加淡入/淡出效果</li>
+    <li>淡入 = 音乐从轻到响（开头自然）</li>
+    <li>淡出 = 音乐从响到轻（结尾自然）</li>
+  </ul>`,
+svg:s(`${PF}
+  <text x="35" y="75" fill="rgba(255,255,255,.12)" font-size="7" font-family="DM Mono">视频原声</text>
+  <rect x="35" y="80" width="80" height="6" rx="3" fill="rgba(255,255,255,.06)"/>
+  <rect x="35" y="80" width="50" height="6" rx="3" fill="rgba(124,92,231,.30)"/>
+  <circle cx="85" cy="83" r="5" fill="rgba(124,92,231,.5)"/>
+  <text x="128" y="86" fill="rgba(255,255,255,.15)" font-size="7" font-family="DM Mono">62%</text>
+  <text x="35" y="110" fill="rgba(255,255,255,.12)" font-size="7" font-family="DM Mono">背景音乐</text>
+  <rect x="35" y="115" width="80" height="6" rx="3" fill="rgba(255,255,255,.06)"/>
+  <rect x="35" y="115" width="32" height="6" rx="3" fill="rgba(0,212,255,.25)"/>
+  <circle cx="67" cy="118" r="5" fill="rgba(0,212,255,.4)"/>
+  <text x="128" y="121" fill="rgba(255,255,255,.15)" font-size="7" font-family="DM Mono">40%</text>
+  <text x="35" y="145" fill="rgba(255,255,255,.12)" font-size="7" font-family="DM Mono">旁白</text>
+  <rect x="35" y="150" width="80" height="6" rx="3" fill="rgba(255,255,255,.06)"/>
+  <rect x="35" y="150" width="62" height="6" rx="3" fill="rgba(253,121,168,.25)"/>
+  <circle cx="97" cy="153" r="5" fill="rgba(253,121,168,.4)"/>
+  <text x="128" y="156" fill="rgba(255,255,255,.15)" font-size="7" font-family="DM Mono">78%</text>
+  <text x="35" y="185" fill="rgba(255,255,255,.08)" font-size="6" font-family="DM Mono">淡化</text>
+  <path d="M35,200 L55,196 L125,196 L145,200" fill="none" stroke="rgba(85,230,193,.20)" stroke-width="1.5"/>
+  <text x="42" y="210" fill="rgba(85,230,193,.2)" font-size="5" font-family="DM Mono">淡入</text>
+  <text x="128" y="210" fill="rgba(85,230,193,.2)" font-size="5" font-family="DM Mono">淡出</text>
+`)},
+
+// ---- 40 SECTION: 特效与滤镜 ----
+{type:'section',num:'07',title:'特效与滤镜',sub:'让视频画面更专业、更有氛围感',svg:s(`
+  <circle cx="70" cy="140" r="35" fill="rgba(124,92,231,.06)"/>
+  <circle cx="90" cy="155" r="35" fill="rgba(0,212,255,.04)"/>
+  <circle cx="110" cy="140" r="35" fill="rgba(253,121,168,.04)"/>
+  <circle cx="90" cy="145" r="18" fill="rgba(255,255,255,.04)"/>
+  <text x="90" y="150" text-anchor="middle" fill="rgba(255,255,255,.15)" font-size="16">✨</text>
+  ${[0,1,2,3,4,5].map(i=>{const a=i*Math.PI/3;return`<circle cx="${90+Math.cos(a)*55}" cy="${170+Math.sin(a)*55}" r="${2+i%2}" fill="rgba(${i%2?'124,92,231':'0,212,255'},.${15+i*3})"/>`;}).join('')}
+`)},
+
+// ---- 41 滤镜 ----
+{type:'content',badge:'特效与滤镜',title:'<em>滤镜</em>的使用',html:`
+  <p class="sub">一键改变视频整体色调和氛围</p>
+  <ul class="nums">
+    <li>选中片段，点击<strong>「滤镜」</strong></li>
+    <li>分类浏览：<strong>风景、人物、美食、复古、胶片</strong>等</li>
+    <li>点击预览效果，可调节<strong>滤镜强度</strong></li>
+    <li>也可以给整个视频统一应用同一个滤镜</li>
+  </ul>
+  <div class="gcard"><p>建议：一个视频用 1-2 种滤镜即可，保持统一感</p></div>`,
+svg:s(`${PF}
+  ${['original','清新','复古','胶片','冷调'].map((n,i)=>`<rect x="${i===0?26:26+i*27}" y="60" width="24" height="32" rx="4" fill="rgba(${['255,255,255','124,92,231','253,203,110','0,212,255','85,230,193'][i]},.${i===0?'04':'10'})"/>
+  <text x="${i===0?38:38+i*27}" y="100" text-anchor="middle" fill="rgba(255,255,255,${i===0?'.12':'.2'})" font-size="5" font-family="DM Mono">${n}</text>`).join('')}
+  <rect x="26" y="110" width="128" height="75" rx="6" fill="rgba(124,92,231,.04)"/>
+  <rect x="36" y="118" width="108" height="55" rx="4" fill="rgba(124,92,231,.08)"/>
+  <text x="90" y="150" text-anchor="middle" fill="rgba(124,92,231,.2)" font-size="8" font-family="DM Mono">滤镜预览</text>
+  <rect x="36" y="195" width="108" height="6" rx="3" fill="rgba(255,255,255,.04)"/>
+  <rect x="36" y="195" width="72" height="6" rx="3" fill="rgba(124,92,231,.25)"/>
+  <circle cx="108" cy="198" r="5" fill="rgba(124,92,231,.5)"/>
+  <text x="90" y="218" text-anchor="middle" fill="rgba(255,255,255,.08)" font-size="6" font-family="DM Mono">强度 67%</text>
+`)},
+
+// ---- 42 调色 ----
+{type:'content',badge:'特效与滤镜',title:'基础<em>调色</em>',html:`
+  <p class="sub">手动微调画面色彩，比滤镜更精细</p>
+  <ul class="bullets">
+    <li><strong>亮度</strong> — 整体明暗程度</li>
+    <li><strong>对比度</strong> — 明暗差异，越高越强烈</li>
+    <li><strong>饱和度</strong> — 颜色鲜艳程度</li>
+    <li><strong>色温</strong> — 偏暖（黄）或偏冷（蓝）</li>
+    <li><strong>锐化</strong> — 让画面更清晰锐利</li>
+  </ul>
+  <div class="gcard"><p>建议：调色微调即可，幅度不要太大，否则不自然</p></div>`,
+svg:s(`${PF}
+  <text x="35" y="65" fill="rgba(255,255,255,.10)" font-size="6" font-family="DM Mono">亮度</text>
+  <rect x="35" y="70" width="80" height="4" rx="2" fill="rgba(255,255,255,.05)"/>
+  <rect x="35" y="70" width="50" height="4" rx="2" fill="rgba(253,203,110,.3)"/>
+  <circle cx="85" cy="72" r="4" fill="rgba(253,203,110,.5)"/>
+  <text x="35" y="95" fill="rgba(255,255,255,.10)" font-size="6" font-family="DM Mono">对比度</text>
+  <rect x="35" y="100" width="80" height="4" rx="2" fill="rgba(255,255,255,.05)"/>
+  <rect x="35" y="100" width="40" height="4" rx="2" fill="rgba(124,92,231,.3)"/>
+  <circle cx="75" cy="102" r="4" fill="rgba(124,92,231,.5)"/>
+  <text x="35" y="125" fill="rgba(255,255,255,.10)" font-size="6" font-family="DM Mono">饱和度</text>
+  <rect x="35" y="130" width="80" height="4" rx="2" fill="rgba(255,255,255,.05)"/>
+  <rect x="35" y="130" width="55" height="4" rx="2" fill="rgba(0,212,255,.3)"/>
+  <circle cx="90" cy="132" r="4" fill="rgba(0,212,255,.5)"/>
+  <text x="35" y="155" fill="rgba(255,255,255,.10)" font-size="6" font-family="DM Mono">色温</text>
+  <rect x="35" y="160" width="80" height="4" rx="2" fill="rgba(255,255,255,.05)"/>
+  <rect x="55" y="160" width="40" height="4" rx="2" fill="rgba(253,121,168,.25)"/>
+  <circle cx="95" cy="162" r="4" fill="rgba(253,121,168,.4)"/>
+  <text x="35" y="185" fill="rgba(255,255,255,.10)" font-size="6" font-family="DM Mono">锐化</text>
+  <rect x="35" y="190" width="80" height="4" rx="2" fill="rgba(255,255,255,.05)"/>
+  <rect x="35" y="190" width="30" height="4" rx="2" fill="rgba(85,230,193,.25)"/>
+  <circle cx="65" cy="192" r="4" fill="rgba(85,230,193,.4)"/>
+`)},
+
+// ---- 43 转场 ----
+{type:'content',badge:'特效与滤镜',title:'<em>转场效果</em>',html:`
+  <p class="sub">让片段之间的切换更自然流畅</p>
+  <ul class="nums">
+    <li>在时间线上，点击两个片段之间的<strong>「竖线」</strong></li>
+    <li>弹出转场选择面板</li>
+    <li>选择转场效果：<strong>叠化、推拉、闪白、模糊</strong>等</li>
+    <li>调整转场<strong>时长</strong>（通常 0.3-0.8 秒最佳）</li>
+  </ul>
+  <div class="gcard"><p>建议：不要每个转场都用不同效果，保持简洁统一</p></div>`,
+svg:s(`${PF}
+  <rect x="26" y="100" width="56" height="50" rx="4" fill="rgba(124,92,231,.15)"/>
+  <rect x="98" y="100" width="56" height="50" rx="4" fill="rgba(0,212,255,.12)"/>
+  <rect x="75" y="108" width="30" height="34" rx="4" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+  <path d="M82,120 L92,125 L82,130" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="1.5"/>
+  <path d="M98,120 L88,125 L98,130" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="1.5"/>
+  <text x="90" y="168" text-anchor="middle" fill="rgba(255,255,255,.08)" font-size="6" font-family="DM Mono">转场</text>
+  <text x="54" y="115" text-anchor="middle" fill="rgba(255,255,255,.12)" font-size="7" font-family="DM Mono">片段A</text>
+  <text x="126" y="115" text-anchor="middle" fill="rgba(255,255,255,.12)" font-size="7" font-family="DM Mono">片段B</text>
+  <rect x="30" y="185" width="40" height="22" rx="4" fill="rgba(124,92,231,.08)"/>
+  <text x="50" y="199" text-anchor="middle" fill="rgba(124,92,231,.2)" font-size="6">叠化</text>
+  <rect x="74" y="185" width="40" height="22" rx="4" fill="rgba(0,212,255,.06)"/>
+  <text x="94" y="199" text-anchor="middle" fill="rgba(0,212,255,.2)" font-size="6">推拉</text>
+  <rect x="118" y="185" width="36" height="22" rx="4" fill="rgba(255,255,255,.03)"/>
+  <text x="136" y="199" text-anchor="middle" fill="rgba(255,255,255,.12)" font-size="6">闪白</text>
+`)},
+
+// ---- 44 画面特效 ----
+{type:'content',badge:'特效与滤镜',title:'<em>画面特效</em>',html:`
+  <p class="sub">给视频添加动态特效，让画面更有冲击力</p>
+  <ul class="bullets">
+    <li>点击底部<strong>「特效」→「画面特效」</strong></li>
+    <li>分类浏览：<strong>基础、动感、复古、梦幻、氛围</strong>等</li>
+    <li>热门特效：抖动、闪烁、故障风、模糊、光效</li>
+    <li>可以叠加多层特效，调整<strong>时长和强度</strong></li>
+  </ul>
+  <div class="gcard"><p>特效是锦上添花，不要滥用，保持克制</p></div>`,
+svg:s(`${PF}
+  <rect x="26" y="55" width="128" height="80" rx="6" fill="rgba(255,255,255,.02)"/>
+  <rect x="35" y="62" width="40" height="30" rx="4" fill="rgba(124,92,231,.12)"/>
+  <text x="55" y="80" text-anchor="middle" fill="rgba(124,92,231,.25)" font-size="6" font-family="DM Mono">抖动</text>
+  <rect x="80" y="62" width="40" height="30" rx="4" fill="rgba(0,212,255,.10)"/>
+  <text x="100" y="80" text-anchor="middle" fill="rgba(0,212,255,.25)" font-size="6" font-family="DM Mono">故障</text>
+  <rect x="125" y="62" width="24" height="30" rx="4" fill="rgba(253,121,168,.08)"/>
+  <rect x="35" y="98" width="40" height="30" rx="4" fill="rgba(253,203,110,.08)"/>
+  <text x="55" y="116" text-anchor="middle" fill="rgba(253,203,110,.2)" font-size="6" font-family="DM Mono">闪烁</text>
+  <rect x="80" y="98" width="40" height="30" rx="4" fill="rgba(85,230,193,.06)"/>
+  <text x="100" y="116" text-anchor="middle" fill="rgba(85,230,193,.2)" font-size="6" font-family="DM Mono">光效</text>
+  <rect x="125" y="98" width="24" height="30" rx="4" fill="rgba(255,255,255,.02)"/>
+  <rect x="26" y="150" width="128" height="45" rx="6" fill="rgba(124,92,231,.05)"/>
+  <text x="90" y="170" text-anchor="middle" fill="rgba(124,92,231,.2)" font-size="7" font-family="DM Mono">特效预览</text>
+  <text x="90" y="185" text-anchor="middle" fill="rgba(255,255,255,.06)" font-size="6" font-family="DM Mono">强度可调</text>
+`)},
+
+// ---- 45 SECTION: 画面调整 ----
+{type:'section',num:'08',title:'画面调整',sub:'裁剪、旋转、画布设置',svg:s(`
+  <rect x="35" y="60" width="110" height="75" rx="6" fill="rgba(124,92,231,.05)" stroke="rgba(124,92,231,.12)" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <rect x="50" y="70" width="80" height="55" rx="4" fill="rgba(124,92,231,.10)"/>
+  <text x="90" y="102" text-anchor="middle" fill="rgba(124,92,231,.2)" font-size="8" font-family="DM Mono">画面</text>
+  <path d="M30,55 L40,55 L40,65" fill="none" stroke="rgba(0,212,255,.25)" stroke-width="1.5"/>
+  <path d="M150,55 L140,55 L140,65" fill="none" stroke="rgba(0,212,255,.25)" stroke-width="1.5"/>
+  <path d="M30,145 L40,145 L40,135" fill="none" stroke="rgba(0,212,255,.25)" stroke-width="1.5"/>
+  <path d="M150,145 L140,145 L140,135" fill="none" stroke="rgba(0,212,255,.25)" stroke-width="1.5"/>
+  <path d="M90,170 L90,185 L95,180 M90,185 L85,180" fill="none" stroke="rgba(124,92,231,.25)" stroke-width="1.5" stroke-linecap="round"/>
+  <circle cx="90" cy="210" r="16" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="1"/>
+  <path d="M83,210 L90,205 L97,210" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="1.5"/>
+  <text x="90" y="248" text-anchor="middle" fill="rgba(255,255,255,.06)" font-size="7" font-family="DM Mono">CROP & ROTATE</text>
+`)},
+
+// ---- 46 裁剪旋转 ----
+{type:'content',badge:'画面调整',title:'<em>裁剪与旋转</em>',html:`
+  <p class="sub">调整画面的构图和方向</p>
+  <ul class="nums">
+    <li>选中片段，点击<strong>「编辑」→「裁剪」</strong></li>
+    <li>可选择预设比例：自由、16:9、9:16、1:1 等</li>
+    <li>双指<strong>缩放和移动</strong>画面，调整构图</li>
+    <li>点击<strong>旋转</strong>按钮可 90° 旋转画面</li>
+    <li>还有<strong>镜像翻转</strong>功能</li>
+  </ul>`,
+svg:s(`${PF}
+  <rect x="26" y="55" width="128" height="86" rx="4" fill="rgba(255,255,255,.02)"/>
+  <rect x="42" y="62" width="96" height="72" rx="4" fill="rgba(124,92,231,.05)" stroke="rgba(124,92,231,.15)" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="90" y="102" text-anchor="middle" fill="rgba(124,92,231,.2)" font-size="7" font-family="DM Mono">裁剪区域</text>
+  <rect x="26" y="152" width="38" height="26" rx="6" fill="rgba(255,255,255,.03)"/>
+  <text x="45" y="168" text-anchor="middle" fill="rgba(255,255,255,.12)" font-size="9">↺</text>
+  <rect x="71" y="152" width="38" height="26" rx="6" fill="rgba(255,255,255,.03)"/>
+  <text x="90" y="168" text-anchor="middle" fill="rgba(255,255,255,.12)" font-size="9">↻</text>
+  <rect x="116" y="152" width="38" height="26" rx="6" fill="rgba(255,255,255,.03)"/>
+  <text x="135" y="169" text-anchor="middle" fill="rgba(255,255,255,.12)" font-size="7" font-family="DM Mono">⟲</text>
+`)},
+
+// ---- 47 画布背景 ----
+{type:'content',badge:'画面调整',title:'<em>画布与背景</em>',html:`
+  <p class="sub">当视频比例与画布不匹配时，设置背景填充</p>
+  <ul class="bullets">
+    <li>点击<strong>「画布」</strong>选项</li>
+    <li>选择画布比例：9:16、16:9、1:1 等</li>
+    <li>背景填充方式：<strong>模糊（最常用）、纯色、图案</strong></li>
+    <li>模糊 = 自动将视频画面模糊后填充空白区域</li>
+  </ul>
+  <div class="gcard"><p>常见场景：横屏视频发竖屏平台，用模糊背景避免黑边</p></div>`,
+svg:s(`${PF}
+  <rect x="32" y="55" width="116" height="80" rx="6" fill="rgba(124,92,231,.04)" stroke="rgba(124,92,231,.10)" stroke-width="1"/>
+  <rect x="48" y="60" width="84" height="48" rx="4" fill="rgba(124,92,231,.12)"/>
+  <text x="90" y="88" text-anchor="middle" fill="rgba(124,92,231,.25)" font-size="7" font-family="DM Mono">原始画面</text>
+  <text x="90" y="128" text-anchor="middle" fill="rgba(255,255,255,.08)" font-size="5" font-family="DM Mono">模糊背景填充区域</text>
+  <rect x="26" y="150" width="128" height="50" rx="6" fill="rgba(255,255,255,.02)"/>
+  <rect x="36" y="155" width="34" height="40" rx="4" fill="rgba(124,92,231,.12)"/>
+  <text x="53" y="190" text-anchor="middle" fill="rgba(255,255,255,.08)" font-size="5">模糊</text>
+  <rect x="76" y="155" width="34" height="40" rx="4" fill="rgba(253,203,110,.08)"/>
+  <text x="93" y="190" text-anchor="middle" fill="rgba(255,255,255,.08)" font-size="5">纯色</text>
+  <rect x="116" y="155" width="34" height="40" rx="4" fill="rgba(0,212,255,.06)"/>
+  <text x="133" y="190" text-anchor="middle" fill="rgba(255,255,255,.08)" font-size="5">图案</text>
+`)},
+
+// ---- 48 画中画 ----
+{type:'content',badge:'画面调整',title:'<em>画中画</em>（PiP）',html:`
+  <p class="sub">在一个画面上叠加另一个小画面</p>
+  <ul class="nums">
+    <li>点击<strong>「画中画」→「新增画中画」</strong></li>
+    <li>选择要叠加的<strong>视频或照片</strong></li>
+    <li>素材以小窗口形式叠加在主画面上</li>
+    <li>可拖动位置、缩放大小、调整层级</li>
+    <li>还可以给画中画添加<strong>描边、圆角、动画</strong></li>
+  </ul>`,
+svg:s(`${PF}
+  <rect x="26" y="55" width="128" height="90" rx="4" fill="rgba(124,92,231,.06)"/>
+  <rect x="70" y="85" width="70" height="46" rx="6" fill="rgba(0,212,255,.10)" stroke="rgba(0,212,255,.25)" stroke-width="1.5"/>
+  <text x="105" y="112" text-anchor="middle" fill="rgba(0,212,255,.25)" font-size="7" font-family="DM Mono">PiP</text>
+  <text x="60" y="80" text-anchor="middle" fill="rgba(124,92,231,.15)" font-size="7" font-family="DM Mono">主画面</text>
+  <path d="M70,135 L80,140 L70,145" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+  <rect x="30" y="155" width="120" height="50" rx="4" fill="rgba(255,255,255,.02)"/>
+  <rect x="34" y="159" width="40" height="20" rx="3" fill="rgba(124,92,231,.10)"/>
+  <text x="54" y="172" text-anchor="middle" fill="rgba(124,92,231,.2)" font-size="5" font-family="DM Mono">主轨</text>
+  <rect x="34" y="183" width="60" height="16" rx="3" fill="rgba(0,212,255,.08)"/>
+  <text x="64" y="193" text-anchor="middle" fill="rgba(0,212,255,.2)" font-size="5" font-family="DM Mono">画中画轨</text>
+`)},
+
+// ---- 49 SECTION: 导出与分享 ----
+{type:'section',num:'09',title:'导出与分享',sub:'完成剪辑，输出你的作品',svg:s(`
+  <rect x="40" y="50" width="100" height="130" rx="10" fill="rgba(124,92,231,.05)" stroke="rgba(124,92,231,.12)" stroke-width="1"/>
+  <rect x="55" y="70" width="70" height="45" rx="4" fill="rgba(124,92,231,.10)"/>
+  <polygon points="82,82 100,95 82,108" fill="rgba(124,92,231,.25)"/>
+  <path d="M90,130 L90,165" stroke="rgba(0,212,255,.25)" stroke-width="2" stroke-linecap="round"/>
+  <polygon points="83,158 90,168 97,158" fill="rgba(0,212,255,.3)"/>
+  <rect x="50" y="175" width="80" height="25" rx="5" fill="rgba(85,230,193,.08)" stroke="rgba(85,230,193,.15)" stroke-width="1"/>
+  <text x="90" y="191" text-anchor="middle" fill="rgba(85,230,193,.25)" font-size="8" font-family="DM Mono">导出完成</text>
+  <text x="90" y="220" text-anchor="middle" fill="rgba(255,255,255,.06)" font-size="7" font-family="DM Mono">EXPORT & SHARE</text>
+`)},
+
+// ---- 50 导出设置 ----
+{type:'content',badge:'导出与分享',title:'<em>导出设置</em>',html:`
+  <p class="sub">选对参数，导出高质量视频</p>
+  <ul class="nums">
+    <li>点击右上角<strong>「导出」/「↑」</strong>按钮</li>
+    <li><strong>分辨率</strong>：推荐 1080p（1920×1080）</li>
+    <li><strong>帧率</strong>：推荐 30fps</li>
+    <li><strong>码率</strong>：推荐「推荐」或「高」</li>
+    <li>等待导出完成，自动保存到相册</li>
+  </ul>
+  <div class="gcard"><p>4K 导出画质最佳，但文件很大，日常 1080p 足够</p></div>`,
+svg:s(`${PF}
+  <rect x="26" y="55" width="128" height="140" rx="8" fill="rgba(255,255,255,.02)"/>
+  <text x="40" y="75" fill="rgba(255,255,255,.10)" font-size="7" font-family="DM Mono">分辨率</text>
+  <rect x="40" y="80" width="100" height="18" rx="4" fill="rgba(124,92,231,.08)"/>
+  <text x="90" y="92" text-anchor="middle" fill="rgba(124,92,231,.3)" font-size="8" font-family="DM Mono">1080p</text>
+  <text x="40" y="115" fill="rgba(255,255,255,.10)" font-size="7" font-family="DM Mono">帧率</text>
+  <rect x="40" y="120" width="100" height="18" rx="4" fill="rgba(0,212,255,.06)"/>
+  <text x="90" y="132" text-anchor="middle" fill="rgba(0,212,255,.25)" font-size="8" font-family="DM Mono">30 fps</text>
+  <text x="40" y="155" fill="rgba(255,255,255,.10)" font-size="7" font-family="DM Mono">码率</text>
+  <rect x="40" y="160" width="100" height="18" rx="4" fill="rgba(85,230,193,.05)"/>
+  <text x="90" y="172" text-anchor="middle" fill="rgba(85,230,193,.2)" font-size="8" font-family="DM Mono">推荐</text>
+  <rect x="40" y="205" width="100" height="28" rx="14" fill="rgba(124,92,231,.18)"/>
+  <text x="90" y="222" text-anchor="middle" fill="rgba(124,92,231,.55)" font-size="9" font-weight="600" font-family="DM Mono">导出视频</text>
+`)},
+
+// ---- 51 新手技巧 ----
+{type:'content',badge:'实用技巧',title:'新手<em>避坑指南</em>',html:`
+  <ul class="bullets">
+    <li><strong>先粗剪再精剪</strong> — 先把大致顺序排好，再逐段细调</li>
+    <li><strong>多用分割少用删除</strong> — 分割后可以单独处理，更灵活</li>
+    <li><strong>背景音乐音量别太大</strong> — 有人声时 BGM 调到 30-40%</li>
+    <li><strong>保持统一风格</strong> — 滤镜、字体、转场不要超过 2-3 种</li>
+    <li><strong>常按撤销</strong> — 做错了随时撤回，大胆尝试</li>
+    <li><strong>定时保存</strong> — 防止意外退出丢失进度</li>
+  </ul>
+  <div class="gcard"><p>最重要的技巧：多练多剪，剪 3 个视频就能熟练上手</p></div>`,
+svg:s(`${PF}
+  <circle cx="90" cy="90" r="25" fill="rgba(253,203,110,.08)" stroke="rgba(253,203,110,.18)" stroke-width="1"/>
+  <text x="90" y="95" text-anchor="middle" fill="rgba(253,203,110,.3)" font-size="18">💡</text>
+  ${['先粗后精','音量控制','风格统一','大胆尝试'].map((t,i)=>`<rect x="35" y="${130+i*28}" width="110" height="22" rx="5" fill="rgba(255,255,255,.02)"/>
+  <circle cx="47" cy="${141+i*28}" r="4" fill="rgba(${i%2?'0,212,255':'124,92,231'},.${10+i*2})"/>
+  <text x="58" y="${144+i*28}" fill="rgba(255,255,255,.15)" font-size="7" font-family="DM Mono">${t}</text>`).join('')}
+`)},
+
+// ---- 52 课程总结 ----
+{type:'cover',html:`
+  <div class="badge">课程总结</div>
+  <h1 class="cover-t">恭喜你<em><br>入门剪辑</em></h1>
+  <p class="sub" style="margin-top:.6rem">掌握了手机剪辑的核心技能<br>现在开始创作属于你的第一个视频作品吧</p>
+  <div style="margin-top:1.5rem;display:flex;gap:.8rem;flex-wrap:wrap">
+    <span style="padding:.4em 1em;border-radius:100px;font-size:.75rem;background:rgba(124,92,231,.1);color:rgba(124,92,231,.6)">剪映基础</span>
+    <span style="padding:.4em 1em;border-radius:100px;font-size:.75rem;background:rgba(0,212,255,.08);color:rgba(0,212,255,.5)">音频处理</span>
+    <span style="padding:.4em 1em;border-radius:100px;font-size:.75rem;background:rgba(85,230,193,.08);color:rgba(85,230,193,.5)">特效滤镜</span>
+    <span style="padding:.4em 1em;border-radius:100px;font-size:.75rem;background:rgba(253,121,168,.08);color:rgba(253,121,168,.5)">导出分享</span>
+  </div>`,
+svg:s(`
+  <circle cx="90" cy="155" r="55" fill="rgba(124,92,231,.04)" stroke="rgba(124,92,231,.08)" stroke-width="1"/>
+  <circle cx="90" cy="155" r="35" fill="rgba(124,92,231,.06)"/>
+  <text x="90" y="162" text-anchor="middle" fill="rgba(124,92,231,.3)" font-size="30">🎬</text>
+  ${[0,1,2,3,4,5,6,7].map(i=>{const a=i*Math.PI/4;return`<circle cx="${90+Math.cos(a)*70}" cy="${155+Math.sin(a)*70}" r="${1.5+Math.random()*2}" fill="rgba(${i%2?'124,92,231':'0,212,255'},.${20+Math.random()*15})"/>`;}).join('')}
+  <text x="90" y="250" text-anchor="middle" fill="rgba(255,255,255,.06)" font-size="9" font-family="DM Mono">THANK YOU</text>
+  <text x="90" y="265" text-anchor="middle" fill="rgba(255,255,255,.04)" font-size="7" font-family="DM Mono">保持创作，持续进步</text>
+`)}
+
+]; /* end slides data */
+
+/* ====== Render ====== */
+const app = document.getElementById('app');
+let cur = Math.min(Math.max((parseInt(location.hash.replace('#',''),10) || 1) - 1, 0), D.length - 1);
+
+function render() {
+  app.innerHTML = D.map((d, i) => {
+    const isCover = d.type === 'cover';
+    const isSec = d.type === 'section';
+    let rightHTML = '';
+    if (isCover) {
+      rightHTML = d.html;
+    } else if (isSec) {
+      rightHTML = `<span class="sec-n">Part ${d.num}</span><h2 class="sec-t">${d.title}</h2><p class="sub">${d.sub}</p>`;
+    } else {
+      rightHTML = `<div class="badge">${d.badge}</div><h2>${d.title}</h2>${d.html}`;
+    }
+    const leftHTML = i < 51 ? shot(`slide${String(i+1).padStart(2,'0')}-gen-v1.png`, `第${i+1}页配图`) : (SHOTS[i] || d.svg);
+    return `<div class="slide${i === cur ? ' active' : ''}" data-i="${i}">
+      <div class="si">
+        <div class="sl">${leftHTML}</div>
+        <div class="sr"><div class="sri">${rightHTML}</div></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function go(to) {
+  if (to < 0 || to >= D.length || to === cur) return;
+  const slides = app.querySelectorAll('.slide');
+  const prev = slides[cur];
+  const next = slides[to];
+  prev.classList.remove('active');
+  prev.classList.add('exit-l');
+  setTimeout(() => prev.classList.remove('exit-l'), 500);
+  next.classList.add('active');
+  cur = to;
+  updateUI();
+}
+
+function updateUI() {
+  document.getElementById('pf').style.width = ((cur + 1) / D.length * 100) + '%';
+  document.getElementById('ct').textContent = String(cur + 1).padStart(2, '0') + ' / ' + D.length;
+  document.getElementById('prev').disabled = cur === 0;
+  document.getElementById('next').disabled = cur === D.length - 1;
+}
+
+render();
+updateUI();
+
+/* Nav buttons */
+document.getElementById('prev').addEventListener('click', () => go(cur - 1));
+document.getElementById('next').addEventListener('click', () => go(cur + 1));
+
+/* Keyboard */
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); go(cur + 1); }
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); go(cur - 1); }
+  if (e.key === 'Home') { e.preventDefault(); go(0); }
+  if (e.key === 'End') { e.preventDefault(); go(D.length - 1); }
+});
+
+/* Touch / Swipe */
+let tx = 0;
+document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, { passive: true });
+document.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - tx;
+  if (Math.abs(dx) > 50) go(cur + (dx < 0 ? 1 : -1));
+}, { passive: true });
+
+/* Mouse wheel */
+let wheelTimer = null;
+document.addEventListener('wheel', e => {
+  if (wheelTimer) return;
+  wheelTimer = setTimeout(() => { wheelTimer = null; }, 600);
+  if (e.deltaY > 0 || e.deltaX > 0) go(cur + 1);
+  else go(cur - 1);
+}, { passive: true });
+</script>
+</body>
+</html>
