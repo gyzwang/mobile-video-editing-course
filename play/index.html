@@ -2034,22 +2034,8 @@ document.addEventListener('keydown', e => {
   }
 });
 
-/* Touch / Swipe controls */
-let tx = 0;
-document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, { passive: true });
-document.addEventListener('touchend', e => {
-  const dx = e.changedTouches[0].clientX - tx;
-  if (Math.abs(dx) > 50) go(cur + (dx < 0 ? 1 : -1));
-}, { passive: true });
-
-/* Mouse wheel controls */
-let wheelTimer = null;
-document.addEventListener('wheel', e => {
-  if (wheelTimer) return;
-  wheelTimer = setTimeout(() => { wheelTimer = null; }, 600);
-  if (e.deltaY > 0 || e.deltaX > 0) go(cur + 1);
-  else go(cur - 1);
-}, { passive: true });
+/* Touch swipe and mouse wheel navigation intentionally disabled.
+   Use the ◀ / ▶ arrow buttons to navigate slides. */
 
 updateUI();
 </script>
